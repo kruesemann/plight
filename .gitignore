@@ -1,0 +1,7 @@
+.vs
+3rdparty
+bin_dbg_x64
+labyrinth/x64
+plight/x64
+*.user
+lib_dbg
