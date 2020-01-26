@@ -19,15 +19,27 @@
     <Filter Include="include\main">
       <UniqueIdentifier>{66656b14-cbdb-49f6-9a43-12abe3ec0a4b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\common">
+      <UniqueIdentifier>{90e18890-6005-4237-8125-c3f312635fe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\common">
+      <UniqueIdentifier>{47b61e73-a288-4653-b9b0-867e97ca8549}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main\plight.cpp">
       <Filter>source\main</Filter>
     </ClCompile>
+    <ClCompile Include="source\common\string.cpp">
+      <Filter>source\common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\main\plight.h">
       <Filter>include\main</Filter>
+    </ClInclude>
+    <ClInclude Include="include\common\string.h">
+      <Filter>include\common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

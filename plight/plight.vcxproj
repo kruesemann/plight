@@ -19,9 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\common\string.cpp" />
     <ClCompile Include="source\main\plight.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\common\string.h" />
     <ClInclude Include="include\main\plight.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
