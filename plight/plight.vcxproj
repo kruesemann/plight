@@ -21,10 +21,12 @@
   <ItemGroup>
     <ClCompile Include="source\common\string.cpp" />
     <ClCompile Include="source\main\plight.cpp" />
+    <ClCompile Include="source\main\window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\common\string.h" />
     <ClInclude Include="include\main\plight.h" />
+    <ClInclude Include="include\main\window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

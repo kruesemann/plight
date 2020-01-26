@@ -8,7 +8,7 @@ namespace Plight
     /*
         String class for easy formatting
     */
-    class String : public std::string
+    class String final : public std::string
     {
         using TInherited = std::string;
 

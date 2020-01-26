@@ -33,6 +33,9 @@
     <ClCompile Include="source\common\string.cpp">
       <Filter>source\common</Filter>
     </ClCompile>
+    <ClCompile Include="source\main\window.cpp">
+      <Filter>source\main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\main\plight.h">
@@ -40,6 +43,9 @@
     </ClInclude>
     <ClInclude Include="include\common\string.h">
       <Filter>include\common</Filter>
+    </ClInclude>
+    <ClInclude Include="include\main\window.h">
+      <Filter>include\main</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
