@@ -9,10 +9,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="ressource">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="source\main">
       <UniqueIdentifier>{73881f92-83ed-4238-87f5-cf207faf6ab4}</UniqueIdentifier>
     </Filter>
@@ -34,6 +30,10 @@
     <Filter Include="include\component">
       <UniqueIdentifier>{05bafca3-1ad9-4285-a4d0-c27ff4542172}</UniqueIdentifier>
     </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main\plight.cpp">
@@ -46,6 +46,9 @@
       <Filter>source\main</Filter>
     </ClCompile>
     <ClCompile Include="source\graphics\renderer.cpp">
+      <Filter>source\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\graphics\shader_manager.cpp">
       <Filter>source\graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -68,5 +71,16 @@
     <ClInclude Include="include\component\render_data.h">
       <Filter>include\component</Filter>
     </ClInclude>
+    <ClInclude Include="include\graphics\shader_manager.h">
+      <Filter>include\graphics</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\bin_dbg_x64\resource\test_shader.glfs">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\bin_dbg_x64\resource\test_shader.glvs">
+      <Filter>resource</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="source\common\string.cpp" />
     <ClCompile Include="source\graphics\renderer.cpp" />
+    <ClCompile Include="source\graphics\shader_manager.cpp" />
     <ClCompile Include="source\main\plight.cpp" />
     <ClCompile Include="source\main\window.cpp" />
   </ItemGroup>
@@ -29,8 +30,13 @@
     <ClInclude Include="include\component\render_data.h" />
     <ClInclude Include="include\graphics\color.h" />
     <ClInclude Include="include\graphics\renderer.h" />
+    <ClInclude Include="include\graphics\shader_manager.h" />
     <ClInclude Include="include\main\plight.h" />
     <ClInclude Include="include\main\window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\bin_dbg_x64\resource\test_shader.glfs" />
+    <None Include="..\bin_dbg_x64\resource\test_shader.glvs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
