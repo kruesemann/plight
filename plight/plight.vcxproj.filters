@@ -25,6 +25,15 @@
     <Filter Include="source\common">
       <UniqueIdentifier>{47b61e73-a288-4653-b9b0-867e97ca8549}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\graphics">
+      <UniqueIdentifier>{1b082f2a-e8b3-499a-8f19-efe5eeac0dd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\graphics">
+      <UniqueIdentifier>{479c539b-7941-461f-bfcc-15573601087d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\component">
+      <UniqueIdentifier>{05bafca3-1ad9-4285-a4d0-c27ff4542172}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main\plight.cpp">
@@ -36,6 +45,9 @@
     <ClCompile Include="source\main\window.cpp">
       <Filter>source\main</Filter>
     </ClCompile>
+    <ClCompile Include="source\graphics\renderer.cpp">
+      <Filter>source\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\main\plight.h">
@@ -46,6 +58,15 @@
     </ClInclude>
     <ClInclude Include="include\main\window.h">
       <Filter>include\main</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\renderer.h">
+      <Filter>include\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\color.h">
+      <Filter>include\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\component\render_data.h">
+      <Filter>include\component</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

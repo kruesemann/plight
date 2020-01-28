@@ -20,11 +20,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\common\string.cpp" />
+    <ClCompile Include="source\graphics\renderer.cpp" />
     <ClCompile Include="source\main\plight.cpp" />
     <ClCompile Include="source\main\window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\common\string.h" />
+    <ClInclude Include="include\component\render_data.h" />
+    <ClInclude Include="include\graphics\color.h" />
+    <ClInclude Include="include\graphics\renderer.h" />
     <ClInclude Include="include\main\plight.h" />
     <ClInclude Include="include\main\window.h" />
   </ItemGroup>
