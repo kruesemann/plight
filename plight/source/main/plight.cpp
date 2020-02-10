@@ -2,16 +2,10 @@
 
 #include "plight/include/main/window.h"
 
-#include "plight/include/component/render_data.h"
-
 #include "plight/include/graphics/attribute.h"
 #include "plight/include/graphics/render_data_factory.h"
 #include "plight/include/graphics/renderer.h"
 #include "plight/include/graphics/shader_manager.h"
-
-#include "glew/include/glew.h"
-
-#include <iostream>
 
 
 void test()
