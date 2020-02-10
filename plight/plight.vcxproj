@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\common\string.cpp" />
+    <ClCompile Include="source\graphics\render_data_factory.cpp" />
     <ClCompile Include="source\graphics\renderer.cpp" />
     <ClCompile Include="source\graphics\shader_manager.cpp" />
     <ClCompile Include="source\main\plight.cpp" />
@@ -28,9 +29,11 @@
   <ItemGroup>
     <ClInclude Include="include\common\string.h" />
     <ClInclude Include="include\component\render_data.h" />
+    <ClInclude Include="include\graphics\render_data_factory.h" />
     <ClInclude Include="include\graphics\color.h" />
     <ClInclude Include="include\graphics\renderer.h" />
     <ClInclude Include="include\graphics\shader_manager.h" />
+    <ClInclude Include="include\graphics\attribute.h" />
     <ClInclude Include="include\main\plight.h" />
     <ClInclude Include="include\main\window.h" />
   </ItemGroup>

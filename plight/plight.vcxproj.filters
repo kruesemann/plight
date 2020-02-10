@@ -51,6 +51,9 @@
     <ClCompile Include="source\graphics\shader_manager.cpp">
       <Filter>source\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="source\graphics\render_data_factory.cpp">
+      <Filter>source\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\main\plight.h">
@@ -72,6 +75,12 @@
       <Filter>include\component</Filter>
     </ClInclude>
     <ClInclude Include="include\graphics\shader_manager.h">
+      <Filter>include\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\render_data_factory.h">
+      <Filter>include\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\attribute.h">
       <Filter>include\graphics</Filter>
     </ClInclude>
   </ItemGroup>
