@@ -2,6 +2,7 @@
 
 #include "plight/include/graphics/attribute.h"
 #include "plight/include/graphics/shader_manager.h"
+#include "plight/include/graphics/uniform_data.h"
 
 #include "glew/include/glew.h"
 
@@ -11,27 +12,32 @@
 namespace Plight::Graphics::RenderDataFactory
 {
     /*
-        Creates a render data component from a list of attributes, a sequence of indices for the render order of vertices and a shader name
+        Attribute data for creating a vertex array
+    */
+    struct AttributeInfo
+    {
+        int                 m_location;
+        size_t              m_dimension;
+    };
+
+    /*
+        Uniform data for creating a uniform buffer
+    */
+    struct UniformInfo
+    {
+        unsigned int        m_location;
+        size_t              m_size;
+        EUniformDataType    m_dataType;
+    };
+
+    /*
+        Compute number of components for the accumulated data of one vertex
         Performs consistency-checks on the attributes' respective data sizes and dimensions
     */
-    Component::RenderData
-    create(ShaderManager& rShaderManager,
-           String const& rShaderName,
-           std::vector<Attribute> const& rAttributes,
-           std::vector<int> const& rIndices)
+    size_t
+    computeVertexDimension(std::vector<Attribute> const& rAttributes, size_t vertexNumber)
     {
-        Component::RenderData result;
-        result.m_shaderProgramId = rShaderManager.getOrCreateShader(rShaderName);
-        result.m_vertexVisits = rIndices.size();
-
-        if (rAttributes.empty())
-            return result;
-
-        // Compute number of vertices
-        size_t const vertexNumber = rAttributes.at(0).m_data.size() / rAttributes.at(0).m_dimension;
-
-        // Compute dimension of accumulated vertex attributes
-        size_t vertexDimension = 0;
+        size_t result = 0;
         for (auto const& rAttribute : rAttributes)
         {
             if (rAttribute.m_data.size() % rAttribute.m_dimension != 0)
@@ -44,11 +50,18 @@ namespace Plight::Graphics::RenderDataFactory
                                      .arg(rAttribute.m_data.size() / rAttribute.m_dimension)
                                      .arg(vertexNumber).c_str());
 
-            vertexDimension += rAttribute.m_dimension;
+            result += rAttribute.m_dimension;
         }
+        return result;
+    }
 
-        // Accumulate the vertex attributes for passing the data to OpenGL
-        std::vector<float> accumulatedAttributes(vertexNumber * vertexDimension, 0.0f);
+    /*
+        Accumulates the attributes into one data array passed to OpenGL
+    */
+    std::vector<float>
+    accumulateAttributes(std::vector<Attribute> const& rAttributes, size_t vertexNumber, size_t vertexDimension)
+    {
+        std::vector<float> result(vertexNumber * vertexDimension, 0.0f);
         size_t offset = 0;
         for (auto const& rAttribute : rAttributes)
         {
@@ -58,9 +71,74 @@ namespace Plight::Graphics::RenderDataFactory
                 auto const attributeIndex = vertex * rAttribute.m_dimension;
 
                 for (size_t component = 0; component < rAttribute.m_dimension; ++component)
-                    accumulatedAttributes.at(accumulatedIndex + component) = rAttribute.m_data.at(attributeIndex + component);
+                    result.at(accumulatedIndex + component) = rAttribute.m_data.at(attributeIndex + component);
             }
             offset += rAttribute.m_dimension;
+        }
+        return result;
+    }
+
+    /*
+        Creates a uniform buffer object
+    */
+    template<class UniformContainer>
+    void
+    createUniform(UniformContainer& rTargetContainer, unsigned int shaderProgramId, int location, size_t size)
+    {
+        auto& rResult = rTargetContainer.emplace_back();
+
+        glUniformBlockBinding(shaderProgramId, location, 0);
+
+        glGenBuffers(1, &rResult.m_uniformBufferObject);
+
+        glBindBuffer(GL_UNIFORM_BUFFER, rResult.m_uniformBufferObject);
+        glBufferData(GL_UNIFORM_BUFFER, 8 * sizeof(float), NULL, GL_STATIC_DRAW);
+
+        glBindBufferRange(GL_UNIFORM_BUFFER, 0, rResult.m_uniformBufferObject, 0, size);
+    }
+
+    /*
+        Creates a render data component from a shader name, a list of attributes, a sequence of indices for the render order of vertices and a list of uniforms
+        Performs consistency-checks on the attributes' respective data sizes and dimensions
+    */
+    Component::RenderData
+    create(ShaderManager& rShaderManager,
+           String const& rShaderName,
+           std::vector<Attribute> const& rAttributes,
+           std::vector<int> const& rIndices,
+           std::vector<UniformData> const& rUniformData)
+    {
+        Component::RenderData result;
+        result.m_shaderProgramId = rShaderManager.getOrCreateShader(rShaderName);
+        result.m_vertexVisits = rIndices.size();
+
+        if (rAttributes.empty())
+            return result;
+
+        size_t const vertexNumber = rAttributes.at(0).m_data.size() / rAttributes.at(0).m_dimension;
+        auto const vertexDimension = computeVertexDimension(rAttributes, vertexNumber);
+        auto const accumulatedAttributes = accumulateAttributes(rAttributes, vertexNumber, vertexDimension);
+
+        // Find attribute locations
+        std::vector<AttributeInfo> attributeInfos;
+        for (auto const& rAttribute : rAttributes)
+        {
+            auto const location = glGetAttribLocation(result.m_shaderProgramId, rAttribute.m_name.c_str());
+            if (location < 0)
+                throw std::exception(String("Graphics error: Failed to retrieve %'s location.")
+                                     .arg(rAttribute.m_name).c_str());
+            attributeInfos.push_back(AttributeInfo{location, rAttribute.m_dimension});
+        }
+
+        // Find uniform block locations
+        std::vector<UniformInfo> uniformInfos;
+        for (auto const& rUniform : rUniformData)
+        {
+            auto const location = glGetUniformBlockIndex(result.m_shaderProgramId, rUniform.m_name.c_str());
+            if (location == GL_INVALID_INDEX)
+                throw std::exception(String("Graphics error: Failed to retrieve %'s location.")
+                                     .arg(rUniform.m_name).c_str());
+            uniformInfos.push_back(UniformInfo{location, rUniform.m_size, rUniform.m_dataType});
         }
 
         // Create vertex array and its buffers
@@ -80,18 +158,26 @@ namespace Plight::Graphics::RenderDataFactory
 
         // Pass attribute meta data to OpenGL
         auto const vertexSize = static_cast<GLsizei>(vertexDimension * sizeof(float));
-        offset = 0;
-        for (auto const& rAttribute : rAttributes)
+        size_t offset = 0;
+        for (auto const& rAttributeInfo : attributeInfos)
         {
-            auto const location = glGetAttribLocation(result.m_shaderProgramId, rAttribute.m_name.c_str());
+            glVertexAttribPointer(rAttributeInfo.m_location, static_cast<GLint>(rAttributeInfo.m_dimension), GL_FLOAT, GL_FALSE, vertexSize, (void*)offset);
+            glEnableVertexAttribArray(rAttributeInfo.m_location);
+            offset += rAttributeInfo.m_dimension * sizeof(float);
+        }
 
-            if (location < 0)
-                throw std::exception(String("Graphics error: Failed to retrieve %'s location.")
-                                     .arg(rAttribute.m_name).c_str());
-
-            glVertexAttribPointer(location, static_cast<GLint>(rAttribute.m_dimension), GL_FLOAT, GL_FALSE, vertexSize, (void*)offset);
-            glEnableVertexAttribArray(location);
-            offset += rAttribute.m_dimension * sizeof(float);
+        // Create uniform buffers
+        for (auto const& rUniformInfo : uniformInfos)
+        {
+            switch (rUniformInfo.m_dataType)
+            {
+            case EUniformDataType::Float:
+                createUniform(result.m_floatUniformBufferData, result.m_shaderProgramId, rUniformInfo.m_location, rUniformInfo.m_size * sizeof(float));
+                break;
+            case EUniformDataType::Int:
+                createUniform(result.m_intUniformBufferData, result.m_shaderProgramId, rUniformInfo.m_location, rUniformInfo.m_size * sizeof(int));
+                break;
+            }
         }
 
         return result;

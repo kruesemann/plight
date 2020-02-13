@@ -6,8 +6,9 @@
 #include "plight/include/graphics/render_data_factory.h"
 #include "plight/include/graphics/renderer.h"
 #include "plight/include/graphics/shader_manager.h"
+#include "plight/include/graphics/uniform.h"
+#include "plight/include/graphics/uniform_data.h"
 
-#include "glew/include/glew.h"
 #include "glfw/include/glfw3.h"
 
 
@@ -32,17 +33,28 @@ void test()
                                                                                      0.0f, 0.0f, 1.0f}}
     };
     std::vector<int> indices = {0, 1, 3, 1, 2, 3};
+    std::vector<Plight::Graphics::UniformData> uniformData = {
+        Plight::Graphics::UniformData{Plight::String("u_colorData"), 8}
+    };
 
-    auto const renderData = Plight::Graphics::RenderDataFactory::create(shaderManager, Plight::String("test_shader"), attributes, indices);
+    auto renderData = Plight::Graphics::RenderDataFactory::create(shaderManager,
+                                                                  Plight::String("test_shader"),
+                                                                  attributes,
+                                                                  indices,
+                                                                  uniformData);
 
-    auto const location = glGetUniformLocation(renderData.m_shaderProgramId, "u_opacity");
-    if (location < 0)
-        return;
+    float lighting[3] = {1.0f, 1.0f, 1.0f};
 
     while (window.pollEvents())
     {
-        glUseProgram(renderData.m_shaderProgramId);
-        glUniform1f(location, sin(glfwGetTime()) / 2.0f + 0.5f);
+        auto const sinus = static_cast<float>(sin(glfwGetTime()) / 2.0f + 0.5f);
+        lighting[1] = static_cast<float>(cos(glfwGetTime()) / 2.0f + 0.5f);
+        lighting[2] = static_cast<float>(sin(glfwGetTime()) / 2.0f + 0.5f);
+
+        renderData.m_floatUniformBufferData.back().m_data = {sinus, 0.0f, 0.0f, 0.0f, lighting[0], lighting[1], lighting[2], 0.0f};
+
+        Plight::Graphics::Uniform::updateFloatBuffer(renderData.m_floatUniformBufferData.back().m_uniformBufferObject,
+                                                     renderData.m_floatUniformBufferData.back().m_data);
         
         renderer.render(renderData);
         window.update();

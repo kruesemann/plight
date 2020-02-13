@@ -54,6 +54,9 @@
     <ClCompile Include="source\graphics\render_data_factory.cpp">
       <Filter>source\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="source\graphics\uniform.cpp">
+      <Filter>source\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\main\plight.h">
@@ -81,6 +84,12 @@
       <Filter>include\graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\graphics\attribute.h">
+      <Filter>include\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\uniform.h">
+      <Filter>include\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\uniform_data.h">
       <Filter>include\graphics</Filter>
     </ClInclude>
   </ItemGroup>
