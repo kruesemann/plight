@@ -1,30 +1,63 @@
 #include "plight/include/graphics/uniform.h"
 
+#include "plight/include/component/uniform_data.h"
+
 #include "glew/include/glew.h"
 
 
 namespace Plight::Graphics::Uniform
 {
-    template<typename DataType>
     void
-    updateBuffer(unsigned int uniformBufferObject,
-                 std::vector<DataType> const& rPaddedData)
+    update(Component::UniformData const& rUniformData,
+           float const& rData)
     {
-        glBindBuffer(GL_UNIFORM_BUFFER, uniformBufferObject);
-        glBufferSubData(GL_UNIFORM_BUFFER, 0, rPaddedData.size() * sizeof(DataType), &rPaddedData[0]);
+        // Use shader
+        glUseProgram(rUniformData.m_shaderProgramId);
+        glUniform1f(static_cast<int>(rUniformData.m_location), rData);
     }
 
     void
-    updateFloatBuffer(unsigned int uniformBufferObject,
-                      std::vector<float> const& rPaddedData)
+    update(Component::UniformData const& rUniformData,
+           Vector<float, 2> const& rData)
     {
-        updateBuffer(uniformBufferObject, rPaddedData);
+        // Use shader
+        glUseProgram(rUniformData.m_shaderProgramId);
+        glUniform2fv(static_cast<int>(rUniformData.m_location), 1, rData.m_data.data());
     }
 
     void
-    updateIntBuffer(unsigned int uniformBufferObject,
-                    std::vector<int> const& rPaddedData)
+    update(Component::UniformData const& rUniformData,
+           Vector<float, 3> const& rData)
     {
-        updateBuffer(uniformBufferObject, rPaddedData);
+        // Use shader
+        glUseProgram(rUniformData.m_shaderProgramId);
+        glUniform3fv(static_cast<int>(rUniformData.m_location), 1, rData.m_data.data());
+    }
+
+    void
+    update(Component::UniformData const& rUniformData,
+           Vector<float, 4> const& rData)
+    {
+        // Use shader
+        glUseProgram(rUniformData.m_shaderProgramId);
+        glUniform4fv(static_cast<int>(rUniformData.m_location), 1, rData.m_data.data());
+    }
+
+    void
+    update(Component::UniformData const& rUniformData,
+           Matrix<float, 3, 3> const& rData)
+    {
+        // Use shader
+        glUseProgram(rUniformData.m_shaderProgramId);
+        glUniformMatrix3fv(rUniformData.m_location, 1, GL_FALSE, rData.m_data.data());
+    }
+
+    void
+    update(Component::UniformData const& rUniformData,
+           Matrix<float, 4, 4> const& rData)
+    {
+        // Use shader
+        glUseProgram(rUniformData.m_shaderProgramId);
+        glUniformMatrix4fv(rUniformData.m_location, 1, GL_FALSE, rData.m_data.data());
     }
 }

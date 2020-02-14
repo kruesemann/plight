@@ -2,7 +2,6 @@
 
 #include "plight/include/graphics/attribute.h"
 #include "plight/include/graphics/shader_manager.h"
-#include "plight/include/graphics/uniform_data.h"
 
 #include "glew/include/glew.h"
 
@@ -18,16 +17,6 @@ namespace Plight::Graphics::RenderDataFactory
     {
         int                 m_location;
         size_t              m_dimension;
-    };
-
-    /*
-        Uniform data for creating a uniform buffer
-    */
-    struct UniformInfo
-    {
-        unsigned int        m_location;
-        size_t              m_size;
-        EUniformDataType    m_dataType;
     };
 
     /*
@@ -79,34 +68,14 @@ namespace Plight::Graphics::RenderDataFactory
     }
 
     /*
-        Creates a uniform buffer object
-    */
-    template<class UniformContainer>
-    void
-    createUniform(UniformContainer& rTargetContainer, unsigned int shaderProgramId, int location, size_t size)
-    {
-        auto& rResult = rTargetContainer.emplace_back();
-
-        glUniformBlockBinding(shaderProgramId, location, 0);
-
-        glGenBuffers(1, &rResult.m_uniformBufferObject);
-
-        glBindBuffer(GL_UNIFORM_BUFFER, rResult.m_uniformBufferObject);
-        glBufferData(GL_UNIFORM_BUFFER, 8 * sizeof(float), NULL, GL_STATIC_DRAW);
-
-        glBindBufferRange(GL_UNIFORM_BUFFER, 0, rResult.m_uniformBufferObject, 0, size);
-    }
-
-    /*
-        Creates a render data component from a shader name, a list of attributes, a sequence of indices for the render order of vertices and a list of uniforms
+        Creates a render data component from a shader name, a list of attributes and a sequence of indices for the render order of vertices
         Performs consistency-checks on the attributes' respective data sizes and dimensions
     */
     Component::RenderData
     create(ShaderManager& rShaderManager,
            String const& rShaderName,
            std::vector<Attribute> const& rAttributes,
-           std::vector<int> const& rIndices,
-           std::vector<UniformData> const& rUniformData)
+           std::vector<int> const& rIndices)
     {
         Component::RenderData result;
         result.m_shaderProgramId = rShaderManager.getOrCreateShader(rShaderName);
@@ -128,17 +97,6 @@ namespace Plight::Graphics::RenderDataFactory
                 throw std::exception(String("Graphics error: Failed to retrieve %'s location.")
                                      .arg(rAttribute.m_name).c_str());
             attributeInfos.push_back(AttributeInfo{location, rAttribute.m_dimension});
-        }
-
-        // Find uniform block locations
-        std::vector<UniformInfo> uniformInfos;
-        for (auto const& rUniform : rUniformData)
-        {
-            auto const location = glGetUniformBlockIndex(result.m_shaderProgramId, rUniform.m_name.c_str());
-            if (location == GL_INVALID_INDEX)
-                throw std::exception(String("Graphics error: Failed to retrieve %'s location.")
-                                     .arg(rUniform.m_name).c_str());
-            uniformInfos.push_back(UniformInfo{location, rUniform.m_size, rUniform.m_dataType});
         }
 
         // Create vertex array and its buffers
@@ -164,20 +122,6 @@ namespace Plight::Graphics::RenderDataFactory
             glVertexAttribPointer(rAttributeInfo.m_location, static_cast<GLint>(rAttributeInfo.m_dimension), GL_FLOAT, GL_FALSE, vertexSize, (void*)offset);
             glEnableVertexAttribArray(rAttributeInfo.m_location);
             offset += rAttributeInfo.m_dimension * sizeof(float);
-        }
-
-        // Create uniform buffers
-        for (auto const& rUniformInfo : uniformInfos)
-        {
-            switch (rUniformInfo.m_dataType)
-            {
-            case EUniformDataType::Float:
-                createUniform(result.m_floatUniformBufferData, result.m_shaderProgramId, rUniformInfo.m_location, rUniformInfo.m_size * sizeof(float));
-                break;
-            case EUniformDataType::Int:
-                createUniform(result.m_intUniformBufferData, result.m_shaderProgramId, rUniformInfo.m_location, rUniformInfo.m_size * sizeof(int));
-                break;
-            }
         }
 
         return result;

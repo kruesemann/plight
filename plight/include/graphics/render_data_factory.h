@@ -13,7 +13,6 @@ namespace Plight
         class ShaderManager;
 
         struct Attribute;
-        struct UniformData;
     }
 }
 
@@ -22,6 +21,5 @@ namespace Plight::Graphics::RenderDataFactory
     Component::RenderData create(ShaderManager&,
                                  String const&,
                                  std::vector<Attribute> const&,
-                                 std::vector<int> const&,
-                                 std::vector<UniformData> const&);
+                                 std::vector<int> const&);
 }

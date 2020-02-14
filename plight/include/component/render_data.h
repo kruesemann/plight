@@ -4,24 +4,6 @@
 
 namespace Plight::Component
 {
-    struct FloatUniformBufferData
-    {
-        // OpenGL-internal uniform buffer object id
-        unsigned int            m_uniformBufferObject = 0;
-
-        // Data (including padding)
-        std::vector<float>      m_data;
-    };
-
-    struct IntUniformBufferData
-    {
-        // OpenGL-internal uniform buffer object id
-        unsigned int            m_uniformBufferObject = 0;
-
-        // Data (including padding)
-        std::vector<int>        m_data;
-    };
-
     /*
         Component holding everthing needed for rendering an object
     */
@@ -35,11 +17,5 @@ namespace Plight::Component
 
         // OpenGL-internal vertex array object id
         unsigned int            m_vertexArrayObject = 0;
-
-        // Float uniform data
-        std::vector<FloatUniformBufferData> m_floatUniformBufferData;
-
-        // Int uniform data
-        std::vector<IntUniformBufferData> m_intUniformBufferData;
     };
 }
