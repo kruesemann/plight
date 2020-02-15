@@ -1,13 +1,14 @@
 #pragma once
-#include "plight/include/graphics/uniform.h"
+#include "plight/include/graphics/update_uniform.h"
 
 #include "plight/include/component/uniform_data.h"
 
 #include "glew/include/glew.h"
 
 
-namespace Plight::Graphics::Uniform
+namespace Plight::Graphics::UpdateUniform
 {
+    
     template<typename DataContainer>
     void
     updateBuffer(Component::UniformBufferData const& rUniformBufferData,

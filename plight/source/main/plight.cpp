@@ -6,8 +6,8 @@
 #include "plight/include/graphics/render_data_factory.h"
 #include "plight/include/graphics/renderer.h"
 #include "plight/include/graphics/shader_manager.h"
-#include "plight/include/graphics/uniform.h"
-#include "plight/include/graphics/uniform_cpp.h"
+#include "plight/include/graphics/update_uniform.h"
+#include "plight/include/graphics/update_uniform_cpp.h"
 #include "plight/include/graphics/uniform_data_factory.h"
 #include "plight/include/graphics/uniform_info.h"
 
@@ -126,10 +126,10 @@ void test()
         color.m_data[1] = static_cast<float>(cos(glfwGetTime()) / 2.0f + 0.5f);
         color.m_data[2] = static_cast<float>(sin(glfwGetTime()) / 2.0f + 0.5f);
 
-        Plight::Graphics::Uniform::update(modelViewMatrixUniform.m_uniformData,
-                                          modelViewMatrix);
-        Plight::Graphics::Uniform::update(colorUniform.m_uniformData,
-                                          color);
+        Plight::Graphics::UpdateUniform::update(modelViewMatrixUniform.m_uniformData,
+                                                modelViewMatrix);
+        Plight::Graphics::UpdateUniform::update(colorUniform.m_uniformData,
+                                                color);
         
         renderer.render(renderData);
         window.update();

@@ -23,7 +23,7 @@
     <ClCompile Include="source\graphics\render_data_factory.cpp" />
     <ClCompile Include="source\graphics\renderer.cpp" />
     <ClCompile Include="source\graphics\shader_manager.cpp" />
-    <ClCompile Include="source\graphics\uniform.cpp" />
+    <ClCompile Include="source\graphics\update_uniform.cpp" />
     <ClCompile Include="source\graphics\uniform_data_factory.cpp" />
     <ClCompile Include="source\main\plight.cpp" />
     <ClCompile Include="source\main\window.cpp" />
@@ -39,8 +39,8 @@
     <ClInclude Include="include\graphics\renderer.h" />
     <ClInclude Include="include\graphics\shader_manager.h" />
     <ClInclude Include="include\graphics\attribute.h" />
-    <ClInclude Include="include\graphics\uniform.h" />
-    <ClInclude Include="include\graphics\uniform_cpp.h" />
+    <ClInclude Include="include\graphics\update_uniform.h" />
+    <ClInclude Include="include\graphics\update_uniform_cpp.h" />
     <ClInclude Include="include\graphics\uniform_data_factory.h" />
     <ClInclude Include="include\graphics\uniform_info.h" />
     <ClInclude Include="include\main\plight.h" />

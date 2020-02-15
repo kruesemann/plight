@@ -14,7 +14,7 @@ namespace Plight
     }
 }
 
-namespace Plight::Graphics::Uniform
+namespace Plight::Graphics::UpdateUniform
 {
     void                        update(Component::UniformData const&,
                                        float const&);
@@ -32,9 +32,9 @@ namespace Plight::Graphics::Uniform
                                        Matrix<float, 3, 3> const&);
 
     void                        update(Component::UniformData const&,
-                                       Matrix<float, 4 , 4> const&);
-
-    template<typename DataType>
+                                       Matrix<float, 4, 4> const&);
+    
+    template<typename DataContainer>
     void                        updateBuffer(Component::UniformBufferData const&,
-                                             std::vector<DataType> const&);
+                                             DataContainer const&);
 }

@@ -54,10 +54,10 @@
     <ClCompile Include="source\graphics\render_data_factory.cpp">
       <Filter>source\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="source\graphics\uniform.cpp">
+    <ClCompile Include="source\graphics\uniform_data_factory.cpp">
       <Filter>source\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="source\graphics\uniform_data_factory.cpp">
+    <ClCompile Include="source\graphics\update_uniform.cpp">
       <Filter>source\graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -89,9 +89,6 @@
     <ClInclude Include="include\graphics\attribute.h">
       <Filter>include\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="include\graphics\uniform.h">
-      <Filter>include\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="include\graphics\uniform_info.h">
       <Filter>include\graphics</Filter>
     </ClInclude>
@@ -101,14 +98,17 @@
     <ClInclude Include="include\component\uniform_data.h">
       <Filter>include\component</Filter>
     </ClInclude>
-    <ClInclude Include="include\graphics\uniform_cpp.h">
-      <Filter>include\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="include\common\vector.h">
       <Filter>include\common</Filter>
     </ClInclude>
     <ClInclude Include="include\common\matrix.h">
       <Filter>include\common</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\update_uniform.h">
+      <Filter>include\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\update_uniform_cpp.h">
+      <Filter>include\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,11 +1,11 @@
-#include "plight/include/graphics/uniform.h"
+#include "plight/include/graphics/update_uniform.h"
 
 #include "plight/include/component/uniform_data.h"
 
 #include "glew/include/glew.h"
 
 
-namespace Plight::Graphics::Uniform
+namespace Plight::Graphics::UpdateUniform
 {
     void
     update(Component::UniformData const& rUniformData,
