@@ -36,12 +36,47 @@ struct ColorUniform
 };
 
 void
-move(entt::registry& rRegistry, entt::entity const& rEntity)
+move(entt::registry& rRegistry)
 {
-    auto& rPosition = rRegistry.get<Position>(rEntity);
-    rPosition.x = static_cast<float>(sin(2.0f * glfwGetTime()) / 2.0f);
-    rPosition.y = static_cast<float>(cos(3.0f * glfwGetTime()) / 2.0f);
-    rRegistry.replace<Position>(rEntity, rPosition);
+    rRegistry.view<Position>().each([&](auto const entity, auto& rPosition)
+                                    {
+                                        rPosition.x = static_cast<float>(sin(2.0f * glfwGetTime()) / 2.0f);
+                                        rPosition.y = static_cast<float>(cos(3.0f * glfwGetTime()) / 2.0f);
+                                        rRegistry.replace<Position>(entity, rPosition);
+                                    });
+}
+
+void
+updateModelViewMatrixUniform(entt::registry& rRegistry)
+{
+    static Plight::Matrix<float, 4, 4> modelViewMatrix(std::array<float, 16>{
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    });
+    rRegistry.view<Position, ModelViewMatrixUniform>().each([&](auto const entity, auto const& rPosition, auto const& rModelViewMatrixUniform)
+                                                            {
+                                                                modelViewMatrix.m_data[12] = rPosition.x;
+                                                                modelViewMatrix.m_data[13] = rPosition.y;
+                                                                Plight::Graphics::UpdateUniform::update(rModelViewMatrixUniform.m_uniformData,
+                                                                                                        modelViewMatrix);
+                                                            });
+}
+
+void
+updateColorUniform(entt::registry& rRegistry)
+{
+    static Plight::Vector<float, 4> color(std::array<float, 4>{1.0f, 0.0f, 1.0f, 1.0f});
+    rRegistry.view<Position, ColorUniform>().each([&](auto const entity, auto const& rPosition, auto const& rColorUniform)
+                                                  {
+                                                      color.m_data[3] = static_cast<float>(sin(glfwGetTime()) / 2.0f + 0.5f);
+                                                      color.m_data[1] = static_cast<float>(cos(glfwGetTime()) / 2.0f + 0.5f);
+                                                      color.m_data[2] = static_cast<float>(sin(glfwGetTime()) / 2.0f + 0.5f);
+                                                  
+                                                      Plight::Graphics::UpdateUniform::update(rColorUniform.m_uniformData,
+                                                                                              color);
+                                                  });
 }
 
 void
@@ -89,49 +124,34 @@ void test()
     };
     std::vector<int> indices = {0, 1, 3, 1, 2, 3};
 
-    auto const renderData = Plight::Graphics::RenderDataFactory::create(shaderManager,
-                                                                        shaderName,
-                                                                        attributes,
-                                                                        indices);
+    registry.assign<Plight::Component::RenderData>(entity,
+                                                   Plight::Graphics::RenderDataFactory::create(shaderManager,
+                                                                                               shaderName,
+                                                                                               attributes,
+                                                                                               indices));
 
     ModelViewMatrixUniform modelViewMatrixUniform;
     modelViewMatrixUniform.m_uniformData = Plight::Graphics::UniformDataFactory::create(shaderManager,
                                                                                         shaderName,
                                                                                         Plight::Graphics::UniformInfo(Plight::String("u_modelViewMatrix"),
                                                                                                                       Plight::Graphics::EUniformType::FloatMat4));
+    registry.assign<ModelViewMatrixUniform>(entity, modelViewMatrixUniform);
 
     ColorUniform colorUniform;
     colorUniform.m_uniformData = Plight::Graphics::UniformDataFactory::create(shaderManager,
                                                                               shaderName,
                                                                               Plight::Graphics::UniformInfo(Plight::String("u_color"),
                                                                                                             Plight::Graphics::EUniformType::FloatVec4));
+    registry.assign<ColorUniform>(entity, colorUniform);
 
-    Plight::Matrix<float, 4, 4> modelViewMatrix(std::array<float, 16>{
-        1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f
-    });
-    Plight::Vector<float, 4> color(std::array<float, 4>{1.0f, 0.0f, 1.0f, 1.0f});
 
     while (window.pollEvents())
     {
-        move(registry, entity);
-
-        auto const& rPosition = registry.get<Position>(entity);
-        modelViewMatrix.m_data[12] = rPosition.x;
-        modelViewMatrix.m_data[13] = rPosition.y;
-
-        color.m_data[3] = static_cast<float>(sin(glfwGetTime()) / 2.0f + 0.5f);
-        color.m_data[1] = static_cast<float>(cos(glfwGetTime()) / 2.0f + 0.5f);
-        color.m_data[2] = static_cast<float>(sin(glfwGetTime()) / 2.0f + 0.5f);
-
-        Plight::Graphics::UpdateUniform::update(modelViewMatrixUniform.m_uniformData,
-                                                modelViewMatrix);
-        Plight::Graphics::UpdateUniform::update(colorUniform.m_uniformData,
-                                                color);
+        move(registry);
+        updateModelViewMatrixUniform(registry);
+        updateColorUniform(registry);
         
-        renderer.render(renderData);
+        renderer.render(registry);
         window.update();
     }
 

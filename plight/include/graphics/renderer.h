@@ -1,16 +1,10 @@
 #pragma once
 #include "plight/include/graphics/color.h"
 
+#include "entt/src/entt/fwd.hpp"
+
 
 typedef unsigned int GLenum;
-
-namespace Plight
-{
-    namespace Component
-    {
-        struct RenderData;
-    }
-}
 
 namespace Plight::Graphics
 {
@@ -68,7 +62,7 @@ namespace Plight::Graphics
 
         void                    setEnableDepthTesting(bool);
 
-        void                    render(Component::RenderData const&) const;
+        void                    render(entt::registry&) const;
 
     private:
 

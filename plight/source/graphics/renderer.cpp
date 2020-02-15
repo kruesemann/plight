@@ -2,6 +2,8 @@
 
 #include "plight/include/component/render_data.h"
 
+#include "entt/src/entt/entt.hpp"
+
 #include "glew/include/glew.h"
 
 #include <exception>
@@ -84,17 +86,20 @@ namespace Plight::Graphics
         Render given vertex array with given shader and uniforms to given render target
     */
     void
-    Renderer::render(Component::RenderData const& rRenderData) const
+    Renderer::render(entt::registry& rRegistry) const
     {
-        // Use shader
-        glUseProgram(rRenderData.m_shaderProgramId);
+        rRegistry.view<Component::RenderData>().each([&](auto const entity, auto const& rRenderData)
+                                                     {
+                                                         // Use shader
+                                                         glUseProgram(rRenderData.m_shaderProgramId);
 
-        // Clear buffers
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                                                         // Clear buffers
+                                                         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Draw vertices
-        glBindVertexArray(rRenderData.m_vertexArrayObject);
-        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(rRenderData.m_vertexVisits), GL_UNSIGNED_INT, 0);
+                                                         // Draw vertices
+                                                         glBindVertexArray(rRenderData.m_vertexArrayObject);
+                                                         glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(rRenderData.m_vertexVisits), GL_UNSIGNED_INT, 0);
+                                                     });
     }
 
     GLenum
