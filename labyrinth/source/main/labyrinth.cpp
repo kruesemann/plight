@@ -1,8 +1,10 @@
-#include "plight/include/main/plight.h"
+#include "labyrinth/include/main/application.h"
 
 
 int
-main(int argc, char* argv[])
+main(int /* argc */, char* /*argv*/[])
 {
-    test();
+    Labyrinth::Application app;
+    app.run();
+    return 0;
 }

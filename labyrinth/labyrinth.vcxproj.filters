@@ -16,10 +16,57 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="include\system">
+      <UniqueIdentifier>{8e71b980-2bab-4c68-9f6d-db2df439a7e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\system">
+      <UniqueIdentifier>{c1053909-9869-414f-8df6-e5baad17d952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\component">
+      <UniqueIdentifier>{9ab967a5-f8ec-49db-a6aa-4a1d129a0783}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\main">
+      <UniqueIdentifier>{94f09280-1b0c-4334-acf5-23c4aa0c8b8d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main\labyrinth.cpp">
       <Filter>source\main</Filter>
     </ClCompile>
+    <ClCompile Include="source\system\movement.cpp">
+      <Filter>source\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\main\application.cpp">
+      <Filter>source\main</Filter>
+    </ClCompile>
+    <ClCompile Include="source\system\uniform_color.cpp">
+      <Filter>source\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\system\uniform_model_view_matrix.cpp">
+      <Filter>source\system</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\system\movement.h">
+      <Filter>include\system</Filter>
+    </ClInclude>
+    <ClInclude Include="include\component\position.h">
+      <Filter>include\component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\main\application.h">
+      <Filter>include\main</Filter>
+    </ClInclude>
+    <ClInclude Include="include\component\uniform_color.h">
+      <Filter>include\component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\component\uniform_model_view_matrix.h">
+      <Filter>include\component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\system\uniform_color.h">
+      <Filter>include\system</Filter>
+    </ClInclude>
+    <ClInclude Include="include\system\uniform_model_view_matrix.h">
+      <Filter>include\system</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

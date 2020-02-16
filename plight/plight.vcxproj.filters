@@ -36,9 +36,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\main\plight.cpp">
-      <Filter>source\main</Filter>
-    </ClCompile>
     <ClCompile Include="source\common\string.cpp">
       <Filter>source\common</Filter>
     </ClCompile>
@@ -60,11 +57,11 @@
     <ClCompile Include="source\graphics\update_uniform.cpp">
       <Filter>source\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="source\common\time.cpp">
+      <Filter>source\common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\main\plight.h">
-      <Filter>include\main</Filter>
-    </ClInclude>
     <ClInclude Include="include\common\string.h">
       <Filter>include\common</Filter>
     </ClInclude>
@@ -109,6 +106,9 @@
     </ClInclude>
     <ClInclude Include="include\graphics\update_uniform_cpp.h">
       <Filter>include\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\common\time.h">
+      <Filter>include\common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

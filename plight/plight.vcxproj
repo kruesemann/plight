@@ -20,17 +20,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\common\string.cpp" />
+    <ClCompile Include="source\common\time.cpp" />
     <ClCompile Include="source\graphics\render_data_factory.cpp" />
     <ClCompile Include="source\graphics\renderer.cpp" />
     <ClCompile Include="source\graphics\shader_manager.cpp" />
     <ClCompile Include="source\graphics\update_uniform.cpp" />
     <ClCompile Include="source\graphics\uniform_data_factory.cpp" />
-    <ClCompile Include="source\main\plight.cpp" />
     <ClCompile Include="source\main\window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\common\matrix.h" />
     <ClInclude Include="include\common\string.h" />
+    <ClInclude Include="include\common\time.h" />
     <ClInclude Include="include\common\vector.h" />
     <ClInclude Include="include\component\render_data.h" />
     <ClInclude Include="include\component\uniform_data.h" />
@@ -43,7 +44,6 @@
     <ClInclude Include="include\graphics\update_uniform_cpp.h" />
     <ClInclude Include="include\graphics\uniform_data_factory.h" />
     <ClInclude Include="include\graphics\uniform_info.h" />
-    <ClInclude Include="include\main\plight.h" />
     <ClInclude Include="include\main\window.h" />
   </ItemGroup>
   <ItemGroup>

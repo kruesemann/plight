@@ -151,12 +151,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\main\application.cpp" />
     <ClCompile Include="source\main\labyrinth.cpp" />
+    <ClCompile Include="source\system\movement.cpp" />
+    <ClCompile Include="source\system\uniform_color.cpp" />
+    <ClCompile Include="source\system\uniform_model_view_matrix.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\plight\plight.vcxproj">
       <Project>{3b3131b3-ad50-47f6-8328-44d226a58763}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\component\uniform_color.h" />
+    <ClInclude Include="include\component\uniform_model_view_matrix.h" />
+    <ClInclude Include="include\component\position.h" />
+    <ClInclude Include="include\main\application.h" />
+    <ClInclude Include="include\system\movement.h" />
+    <ClInclude Include="include\system\uniform_color.h" />
+    <ClInclude Include="include\system\uniform_model_view_matrix.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
