@@ -10,6 +10,9 @@
 
 namespace Plight::Graphics::UniformDataFactory
 {
+    /*
+        Initialize shader uniform and return component for updates
+    */
     Component::UniformData
     create(ShaderManager& rShaderManager,
            String const& rShaderName,
@@ -26,6 +29,9 @@ namespace Plight::Graphics::UniformDataFactory
         return result;
     }
 
+    /*
+        Initialize shader uniform buffer and return component for updates
+    */
     Component::UniformBufferData
     create(ShaderManager& rShaderManager,
            String const& rShaderName,

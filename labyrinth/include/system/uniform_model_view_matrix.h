@@ -4,5 +4,8 @@
 
 namespace Labyrinth::System::UniformModelViewMatrix
 {
+    /*
+        System for updating the uniform "u_modelViewMatrix"
+    */
     void                    update(entt::registry const&);
 }

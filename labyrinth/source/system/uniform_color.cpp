@@ -12,6 +12,9 @@
 
 namespace Labyrinth::System::UniformColor
 {
+    /*
+        Update all uniforms "u_color" based on elapsed time
+    */
     void
     update(entt::registry const& rRegistry,
            Plight::Time const& rDelta)

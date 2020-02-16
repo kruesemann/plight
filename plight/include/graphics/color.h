@@ -3,6 +3,9 @@
 
 namespace Plight::Graphics
 {
+    /*
+        Basic color class
+    */
     struct Color
     {
         unsigned char           r = 0;

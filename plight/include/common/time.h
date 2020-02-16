@@ -3,6 +3,9 @@
 
 namespace Plight
 {
+    /*
+        Basic time class for getting the current timestamp
+    */
     struct Time
     {
         static Time             now();

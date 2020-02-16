@@ -4,6 +4,9 @@
 
 namespace Plight
 {
+    /*
+        Basic vector template
+    */
     template<typename DataType, size_t Size>
     class Vector
     {

@@ -11,6 +11,9 @@
 
 namespace Labyrinth::System::UniformModelViewMatrix
 {
+    /*
+        Update all uniforms "u_modelViewMatrix" based on position
+    */
     void
     update(entt::registry const& rRegistry)
     {

@@ -16,6 +16,9 @@ namespace Plight
 
 namespace Plight::Graphics::UpdateUniform
 {
+    /*
+        Functions for updating shader uniforms
+    */
     void                        update(Component::UniformData const&,
                                        float const&);
 
@@ -34,6 +37,9 @@ namespace Plight::Graphics::UpdateUniform
     void                        update(Component::UniformData const&,
                                        Matrix<float, 4, 4> const&);
     
+    /*
+        Template function for updating shader uniform buffers
+    */
     template<typename DataContainer>
     void                        updateBuffer(Component::UniformBufferData const&,
                                              DataContainer const&);

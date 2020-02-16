@@ -18,6 +18,9 @@ namespace Plight
 
 namespace Plight::Graphics::RenderDataFactory
 {
+    /*
+        Factory for initializing shader attributes and creating components that enable vertex rendering
+    */
     Component::RenderData create(ShaderManager&,
                                  String const&,
                                  std::vector<Attribute> const&,

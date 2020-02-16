@@ -3,6 +3,9 @@
 
 namespace Labyrinth::Component
 {
+    /*
+        Component holding the position indepent of the grid
+    */
     struct Position
     {
         float                   m_x;

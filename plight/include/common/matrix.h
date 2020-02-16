@@ -4,6 +4,9 @@
 
 namespace Plight
 {
+    /*
+        Basic matrix template
+    */
     template<typename DataType, size_t Width, size_t Height>
     class Matrix
     {

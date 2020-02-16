@@ -3,6 +3,9 @@
 
 namespace Labyrinth
 {
+    /*
+        Application running the game
+    */
     class Application
     {
     public:

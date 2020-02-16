@@ -44,6 +44,9 @@ debugCallback(GLenum,
 
 namespace Labyrinth
 {
+    /*
+        Start the game
+    */
     void
     Application::run()
     {

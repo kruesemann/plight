@@ -9,6 +9,9 @@
 
 namespace Labyrinth::System::Movement
 {
+    /*
+        Move all entities based on elapsed time
+    */
     void
     update(entt::registry& rRegistry,
            Plight::Time const& rDelta)

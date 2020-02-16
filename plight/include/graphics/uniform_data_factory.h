@@ -17,10 +17,16 @@ namespace Plight
 
 namespace Plight::Graphics::UniformDataFactory
 {
+    /*
+        Factory for initializing shader uniforms and creating components that enable uniform updates
+    */
     Component::UniformData      create(ShaderManager&,
                                        String const&,
                                        Graphics::UniformInfo const&);
 
+    /*
+        Factory for initializing shader uniform buffers and creating components that enable uniform buffer updates
+    */
     Component::UniformBufferData create(ShaderManager&,
                                         String const&,
                                         Graphics::UniformBufferInfo const&);

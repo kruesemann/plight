@@ -4,6 +4,9 @@
 
 namespace Plight::Graphics
 {
+    /*
+        GLSL uniform types
+    */
     enum class EUniformType
     {
         Bool,
@@ -73,6 +76,9 @@ namespace Plight::Graphics
         DoubleMat4
     };
 
+    /*
+        Basic data for shader uniform initialization
+    */
     struct UniformInfo
     {
                             UniformInfo(String const& rName, EUniformType dataType)
@@ -84,6 +90,9 @@ namespace Plight::Graphics
         EUniformType        m_dataType;
     };
 
+    /*
+        Basic data for shader uniform buffer initialization
+    */
     struct UniformBufferInfo
     {
                             UniformBufferInfo(String const& rName, size_t rawSize)

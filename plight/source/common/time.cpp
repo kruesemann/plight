@@ -5,6 +5,9 @@
 
 namespace Plight
 {
+    /*
+        Get current timestamp
+    */
     Time
     Time::now()
     {
