@@ -124,11 +124,11 @@ void test()
     };
     std::vector<int> indices = {0, 1, 3, 1, 2, 3};
 
-    registry.assign<Plight::Component::RenderData>(entity,
-                                                   Plight::Graphics::RenderDataFactory::create(shaderManager,
-                                                                                               shaderName,
-                                                                                               attributes,
-                                                                                               indices));
+    auto const& rRenderData = registry.assign<Plight::Component::RenderData>(entity,
+                                                                             Plight::Graphics::RenderDataFactory::create(shaderManager,
+                                                                                                                         shaderName,
+                                                                                                                         attributes,
+                                                                                                                         indices));
 
     ModelViewMatrixUniform modelViewMatrixUniform;
     modelViewMatrixUniform.m_uniformData = Plight::Graphics::UniformDataFactory::create(shaderManager,
@@ -151,7 +151,7 @@ void test()
         updateModelViewMatrixUniform(registry);
         updateColorUniform(registry);
         
-        renderer.render(registry);
+        renderer.render(rRenderData);
         window.update();
     }
 
