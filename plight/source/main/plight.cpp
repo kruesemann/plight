@@ -36,12 +36,12 @@ struct ColorUniform
 };
 
 void
-move(entt::registry& rRegistry)
+move(entt::registry& rRegistry, double delta)
 {
     rRegistry.view<Position>().each([&](auto const entity, auto& rPosition)
                                     {
-                                        rPosition.x = static_cast<float>(sin(2.0f * glfwGetTime()) / 2.0f);
-                                        rPosition.y = static_cast<float>(cos(3.0f * glfwGetTime()) / 2.0f);
+                                        rPosition.x = static_cast<float>(sin(2.0f * delta) / 2.0f);
+                                        rPosition.y = static_cast<float>(cos(3.0f * delta) / 2.0f);
                                         rRegistry.replace<Position>(entity, rPosition);
                                     });
 }
@@ -65,14 +65,14 @@ updateModelViewMatrixUniform(entt::registry& rRegistry)
 }
 
 void
-updateColorUniform(entt::registry& rRegistry)
+updateColorUniform(entt::registry& rRegistry, double delta)
 {
     static Plight::Vector<float, 4> color(std::array<float, 4>{1.0f, 0.0f, 1.0f, 1.0f});
     rRegistry.view<Position, ColorUniform>().each([&](auto const entity, auto const& rPosition, auto const& rColorUniform)
                                                   {
-                                                      color.m_data[3] = static_cast<float>(sin(glfwGetTime()) / 2.0f + 0.5f);
-                                                      color.m_data[1] = static_cast<float>(cos(glfwGetTime()) / 2.0f + 0.5f);
-                                                      color.m_data[2] = static_cast<float>(sin(glfwGetTime()) / 2.0f + 0.5f);
+                                                      color.m_data[3] = static_cast<float>(sin(delta) / 2.0f + 0.5f);
+                                                      color.m_data[1] = static_cast<float>(cos(delta) / 2.0f + 0.5f);
+                                                      color.m_data[2] = static_cast<float>(sin(delta) / 2.0f + 0.5f);
                                                   
                                                       Plight::Graphics::UpdateUniform::update(rColorUniform.m_uniformData,
                                                                                               color);
@@ -97,6 +97,8 @@ debugCallback(GLenum,
 void test()
 {
     Plight::Window window;
+    window.setEnableVSync(false);
+
     entt::registry registry;
     Plight::Graphics::Renderer renderer;
     Plight::Graphics::ShaderManager shaderManager;
@@ -144,15 +146,28 @@ void test()
                                                                                                             Plight::Graphics::EUniformType::FloatVec4));
     registry.assign<ColorUniform>(entity, colorUniform);
 
+    size_t frameCount = 0;
+    double timestamp = glfwGetTime();
 
     while (window.pollEvents())
     {
-        move(registry);
+        auto const delta = glfwGetTime();
+
+        if (delta - timestamp >= 1)
+        {
+            std::cout << frameCount << " fps\n";
+            frameCount = 0;
+            timestamp = delta;
+        }
+
+        move(registry, delta);
         updateModelViewMatrixUniform(registry);
-        updateColorUniform(registry);
+        updateColorUniform(registry, delta);
         
         renderer.render(rRenderData);
         window.update();
+
+        ++frameCount;
     }
 
     registry.destroy(entity);
