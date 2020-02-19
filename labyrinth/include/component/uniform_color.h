@@ -1,14 +1,14 @@
 #pragma once
-#include "plight/include/component/uniform_data.h"
+#include "plight/include/component/uniform_buffer_data.h"
 
 
 namespace Labyrinth::Component
 {
     /*
-        Component for updating uniform "u_color"
+        Component for updating uniform buffer "b_color"
     */
     struct UniformColor
     {
-        Plight::Component::UniformData m_uniformData;
+        Plight::Component::UniformBufferData m_uniformBufferData;
     };
 }

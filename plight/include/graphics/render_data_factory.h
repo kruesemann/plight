@@ -10,9 +10,8 @@ namespace Plight
 
     namespace Graphics
     {
-        class ShaderManager;
-
         struct Attribute;
+        struct Shader;
     }
 }
 
@@ -21,8 +20,7 @@ namespace Plight::Graphics::RenderDataFactory
     /*
         Factory for initializing shader attributes and creating components that enable vertex rendering
     */
-    Component::RenderData create(ShaderManager&,
-                                 String const&,
+    Component::RenderData create(Shader const&,
                                  std::vector<Attribute> const&,
                                  std::vector<int> const&);
 }

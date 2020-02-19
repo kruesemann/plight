@@ -59,14 +59,22 @@
     <ClInclude Include="include\component\uniform_color.h">
       <Filter>include\component</Filter>
     </ClInclude>
-    <ClInclude Include="include\component\uniform_model_view_matrix.h">
-      <Filter>include\component</Filter>
-    </ClInclude>
     <ClInclude Include="include\system\uniform_color.h">
       <Filter>include\system</Filter>
     </ClInclude>
     <ClInclude Include="include\system\uniform_model_view_matrix.h">
       <Filter>include\system</Filter>
     </ClInclude>
+    <ClInclude Include="include\component\uniform_model_view_matrix.h">
+      <Filter>include\component</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\bin_dbg_x64\resource\test_shader.glfs">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\bin_dbg_x64\resource\test_shader.glvs">
+      <Filter>resource</Filter>
+    </None>
   </ItemGroup>
 </Project>

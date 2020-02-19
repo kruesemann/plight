@@ -38,6 +38,8 @@ namespace Plight
 
         bool                    pollEvents() const;
 
+        int                     pollKey(int) const;
+
         void                    update();
 
     private:

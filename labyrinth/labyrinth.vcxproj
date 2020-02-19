@@ -164,12 +164,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\component\uniform_color.h" />
-    <ClInclude Include="include\component\uniform_model_view_matrix.h" />
     <ClInclude Include="include\component\position.h" />
+    <ClInclude Include="include\component\uniform_model_view_matrix.h" />
     <ClInclude Include="include\main\application.h" />
     <ClInclude Include="include\system\movement.h" />
     <ClInclude Include="include\system\uniform_color.h" />
     <ClInclude Include="include\system\uniform_model_view_matrix.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\bin_dbg_x64\resource\test_shader.glfs" />
+    <None Include="..\bin_dbg_x64\resource\test_shader.glvs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

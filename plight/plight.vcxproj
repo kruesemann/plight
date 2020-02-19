@@ -24,8 +24,7 @@
     <ClCompile Include="source\graphics\render_data_factory.cpp" />
     <ClCompile Include="source\graphics\renderer.cpp" />
     <ClCompile Include="source\graphics\shader_manager.cpp" />
-    <ClCompile Include="source\graphics\update_uniform.cpp" />
-    <ClCompile Include="source\graphics\uniform_data_factory.cpp" />
+    <ClCompile Include="source\graphics\update_uniform_buffer.cpp" />
     <ClCompile Include="source\main\window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -34,21 +33,17 @@
     <ClInclude Include="include\common\time.h" />
     <ClInclude Include="include\common\vector.h" />
     <ClInclude Include="include\component\render_data.h" />
-    <ClInclude Include="include\component\uniform_data.h" />
+    <ClInclude Include="include\component\uniform_buffer_data.h" />
     <ClInclude Include="include\graphics\render_data_factory.h" />
     <ClInclude Include="include\graphics\color.h" />
     <ClInclude Include="include\graphics\renderer.h" />
+    <ClInclude Include="include\graphics\shader.h" />
     <ClInclude Include="include\graphics\shader_manager.h" />
     <ClInclude Include="include\graphics\attribute.h" />
-    <ClInclude Include="include\graphics\update_uniform.h" />
-    <ClInclude Include="include\graphics\update_uniform_cpp.h" />
-    <ClInclude Include="include\graphics\uniform_data_factory.h" />
-    <ClInclude Include="include\graphics\uniform_info.h" />
+    <ClInclude Include="include\graphics\uniform_buffer_update_data.h" />
+    <ClInclude Include="include\graphics\update_uniform_buffer.h" />
+    <ClInclude Include="include\graphics\uniform_buffer_info.h" />
     <ClInclude Include="include\main\window.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\bin_dbg_x64\resource\test_shader.glfs" />
-    <None Include="..\bin_dbg_x64\resource\test_shader.glvs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -1,7 +1,7 @@
 #include "plight/include/graphics/render_data_factory.h"
 
 #include "plight/include/graphics/attribute.h"
-#include "plight/include/graphics/shader_manager.h"
+#include "plight/include/graphics/shader.h"
 
 #include "glew/include/glew.h"
 
@@ -68,17 +68,16 @@ namespace Plight::Graphics::RenderDataFactory
     }
 
     /*
-        Creates a render data component from a shader name, a list of attributes and a sequence of indices for the render order of vertices
+        Creates a render data component from a shader, a list of attributes and a sequence of indices for the render order of vertices
         Performs consistency-checks on the attributes' respective data sizes and dimensions
     */
     Component::RenderData
-    create(ShaderManager& rShaderManager,
-           String const& rShaderName,
+    create(Shader const& rShader,
            std::vector<Attribute> const& rAttributes,
            std::vector<int> const& rIndices)
     {
         Component::RenderData result;
-        result.m_shaderProgramId = rShaderManager.getOrCreateShader(rShaderName);
+        result.m_shaderProgramId = rShader.m_programId;
         result.m_vertexVisits = rIndices.size();
 
         if (rAttributes.empty())

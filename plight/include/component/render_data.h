@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+#include "plight/include/component/uniform_buffer_data.h"
 
 
 namespace Plight::Component
@@ -17,5 +17,8 @@ namespace Plight::Component
 
         // OpenGL-internal vertex array object id
         unsigned int            m_vertexArrayObject = 0;
+
+        // Uniform buffers that should be updated before rendering (with update data)
+        mutable std::vector<UniformBufferData> m_uniformBufferUpdates;
     };
 }

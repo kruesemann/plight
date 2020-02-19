@@ -111,6 +111,12 @@ namespace Plight
         return !glfwWindowShouldClose(m_pWindow);
     }
 
+    int
+    Window::pollKey(int key) const
+    {
+        return glfwGetKey(m_pWindow, key);
+    }
+
     /*
         Update the display
     */

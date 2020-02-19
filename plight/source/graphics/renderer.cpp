@@ -2,6 +2,8 @@
 
 #include "plight/include/component/render_data.h"
 
+#include "plight/include/graphics/update_uniform_buffer.h"
+
 #include "glew/include/glew.h"
 
 #include <exception>
@@ -81,16 +83,26 @@ namespace Plight::Graphics
     }
 
     /*
+        Clears render buffers
+    */
+    void
+    Renderer::clear()
+    {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
+    /*
         Render given vertex array with given shader and uniforms to given render target
     */
     void
-    Renderer::render(Component::RenderData const& rRenderData) const
+    Renderer::render(Component::RenderData const& rRenderData)
     {
         // Use shader
         glUseProgram(rRenderData.m_shaderProgramId);
 
-        // Clear buffers
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        for (auto& rUniformBufferUpdate : rRenderData.m_uniformBufferUpdates)
+            updateUniformBuffer(rUniformBufferUpdate);
+        rRenderData.m_uniformBufferUpdates.clear();
 
         // Draw vertices
         glBindVertexArray(rRenderData.m_vertexArrayObject);

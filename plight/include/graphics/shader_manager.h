@@ -1,13 +1,21 @@
 #pragma once
 #include "plight/include/common/string.h"
 
-#include <unordered_map>
+#include "plight/include/graphics/shader.h"
 
+
+namespace Plight
+{
+    namespace Graphics
+    {
+        struct UniformBufferInfo;
+    }
+}
 
 namespace Plight::Graphics
 {
     /*
-        Creates, compiles, manages and cleans up GL programs
+        Creates, compiles, manages and cleans up GL programs including their uniform variables
     */
     class ShaderManager final
     {
@@ -15,7 +23,8 @@ namespace Plight::Graphics
 
                                 ~ShaderManager();
 
-        unsigned int            getOrCreateShader(String const&);
+        Shader const&           getOrCreateShader(String const&,
+                                                  std::vector<Graphics::UniformBufferInfo> const&);
 
     private:
 
@@ -28,7 +37,7 @@ namespace Plight::Graphics
             Fragment
         };
 
-        static unsigned int    createShader(String const&);
+        static unsigned int    createProgram(String const&);
 
         static unsigned int    createShaderFromString(String const&, EShaderType);
 
@@ -37,8 +46,11 @@ namespace Plight::Graphics
         static String          getShaderLog(unsigned int);
         static String          getProgramLog(unsigned int);
 
-        // Map between shader names and program id's
-        std::unordered_map<std::string, unsigned int> m_programMap;
+        static std::unordered_map<std::string, Component::UniformBufferData> createUniformBuffers(unsigned int,
+                                                                                                  std::vector<Graphics::UniformBufferInfo> const&);
+
+        // Map between shader names and data
+        std::unordered_map<std::string, Shader> m_shaderMap;
 
     };
 }

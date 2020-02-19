@@ -1,5 +1,9 @@
 #include "plight/include/graphics/shader_manager.h"
 
+#include "plight/include/component/uniform_buffer_data.h"
+
+#include "plight/include/graphics/uniform_buffer_info.h"
+
 #include "glew/include/glew.h"
 
 #include <exception>
@@ -30,31 +34,33 @@ namespace Plight::Graphics
     ShaderManager::~ShaderManager()
     {
         // Deallocate programs
-        for (auto const& rShader : m_programMap)
-            glDeleteProgram(rShader.second);
+        for (auto const& rShader : m_shaderMap)
+            glDeleteProgram(rShader.second.m_programId);
     }
 
     /*
-        Checks if a shader already exists and in that case returns its program id; creates one in the other case
+        Creates a shader if it does not already exist and returns it
     */
-    unsigned int
-    ShaderManager::getOrCreateShader(String const& rName)
+    Shader const&
+    ShaderManager::getOrCreateShader(String const& rName,
+                                     std::vector<Graphics::UniformBufferInfo> const& rUniformBufferInfo)
     {
-        auto const itProgram = m_programMap.find(rName);
-        if (itProgram == m_programMap.end())
+        auto const itShader = m_shaderMap.find(rName);
+        if (itShader == m_shaderMap.end())
         {
-            auto programId = createShader(rName);
-            m_programMap.emplace(rName, programId);
-            return programId;
+            auto& rShader = m_shaderMap[rName];
+            rShader.m_programId = createProgram(rName);
+            rShader.m_uniformBufferDataMap = createUniformBuffers(rShader.m_programId, rUniformBufferInfo);
+            return rShader;
         }
-        return itProgram->second;
+        return itShader->second;
     }
 
     /*
         Creates a shader consisting of a vertex and a fragment shader and creates its program id
     */
     unsigned int
-    ShaderManager::createShader(String const& rName)
+    ShaderManager::createProgram(String const& rName)
     {
         // Create shaders
         auto const shaderSourceFileTemplate = String("resource/%.%").arg(rName);
@@ -181,5 +187,44 @@ namespace Plight::Graphics
             log = String(infoLog.m_chars);
         }
         return log;
+    }
+
+    /*
+        Creates given uniform buffers
+    */
+    std::unordered_map<std::string, Component::UniformBufferData>
+    ShaderManager::createUniformBuffers(unsigned int programId, std::vector<Graphics::UniformBufferInfo> const& rUniformBufferInfo)
+    {
+        std::unordered_map<std::string, Component::UniformBufferData> result;
+
+        for (auto const& rInfo : rUniformBufferInfo)
+        {
+            if (result.find(rInfo.m_name) != result.end())
+                throw std::exception(String("Graphics error: Multiple uniform buffers for '%' not allowed.")
+                                     .arg(rInfo.m_name).c_str());
+
+            auto& rData = result[rInfo.m_name];
+
+            // Find uniform block location
+            auto const location = glGetUniformBlockIndex(programId, rInfo.m_name.c_str());
+            if (location == GL_INVALID_INDEX)
+                throw std::exception(String("Graphics error: Failed to retrieve %'s location.")
+                                     .arg(rInfo.m_name).c_str());
+
+            // Create uniform buffer
+            static unsigned int bindingPoint = 0;
+
+            glUniformBlockBinding(programId, location, bindingPoint);
+
+            glGenBuffers(1, &rData.m_uniformBufferObject);
+
+            glBindBuffer(GL_UNIFORM_BUFFER, rData.m_uniformBufferObject);
+            glBufferData(GL_UNIFORM_BUFFER, rInfo.m_byteSize, NULL, GL_STATIC_DRAW);
+
+            glBindBufferRange(GL_UNIFORM_BUFFER, bindingPoint, rData.m_uniformBufferObject, 0, rInfo.m_byteSize);
+            ++bindingPoint;
+        }
+
+        return result;
     }
 }
