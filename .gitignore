@@ -5,3 +5,5 @@ labyrinth/x64
 plight/x64
 *.user
 lib_dbg
+bin_x64
+lib
