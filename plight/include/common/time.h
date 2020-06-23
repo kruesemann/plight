@@ -10,11 +10,12 @@ namespace Plight
     {
         static Time             now();
 
-        double                  m_seconds;
+        // Time in milliseconds
+        double                  m_ms;
     };
 
     inline double operator-(Time const& rLhs, Time const& rRhs)
     {
-        return rLhs.m_seconds - rRhs.m_seconds;
+        return rLhs.m_ms - rRhs.m_ms;
     }
 }

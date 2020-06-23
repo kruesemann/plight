@@ -20,8 +20,8 @@ namespace Labyrinth::System::UniformModelViewMatrix
                                                                      Plight::Graphics::UniformBufferUpdateData<float> update;
                                                                      update.m_offset = 0;
                                                                      update.m_data = {
-                                                                         0.1f, 0.0f, 0.0f, 0.0f,
-                                                                         0.0f, 0.1f, 0.0f, 0.0f,
+                                                                         1.0f, 0.0f, 0.0f, 0.0f,
+                                                                         0.0f, 1.0f, 0.0f, 0.0f,
                                                                          0.0f, 0.0f, 1.0f, 0.0f,
                                                                          0.0f, 0.0f, 0.0f, 1.0f
                                                                      };
@@ -43,7 +43,7 @@ namespace Labyrinth::System::UniformModelViewMatrix
                                                              {
                                                                  Plight::Graphics::UniformBufferUpdateData<float> update;
                                                                  update.m_offset = 12 * sizeof(float);
-                                                                 update.m_data = {rPosition.m_x, rPosition.m_y};
+                                                                 update.m_data = {rPosition.m_value[0] / 10000.0f, rPosition.m_value[1] / 10000.0f};
                                                                  rUniformModelViewMatrix.m_uniformBufferData.m_floatUpdateData = {update};
                                                                  rRenderData.m_uniformBufferUpdates.emplace_back(rUniformModelViewMatrix.m_uniformBufferData);
                                                              });

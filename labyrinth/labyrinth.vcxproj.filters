@@ -45,6 +45,12 @@
     <ClCompile Include="source\system\uniform_model_view_matrix.cpp">
       <Filter>source\system</Filter>
     </ClCompile>
+    <ClCompile Include="source\system\collision.cpp">
+      <Filter>source\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\system\position.cpp">
+      <Filter>source\system</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\system\movement.h">
@@ -68,12 +74,27 @@
     <ClInclude Include="include\component\uniform_model_view_matrix.h">
       <Filter>include\component</Filter>
     </ClInclude>
+    <ClInclude Include="include\system\collision.h">
+      <Filter>include\system</Filter>
+    </ClInclude>
+    <ClInclude Include="include\component\velocity.h">
+      <Filter>include\component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\system\position.h">
+      <Filter>include\system</Filter>
+    </ClInclude>
+    <ClInclude Include="include\component\grid_collider.h">
+      <Filter>include\component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\component\collider.h">
+      <Filter>include\component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\bin_dbg_x64\resource\test_shader.glfs">
+    <None Include="..\bin_x64\resource\test_shader.glfs">
       <Filter>resource</Filter>
     </None>
-    <None Include="..\bin_dbg_x64\resource\test_shader.glvs">
+    <None Include="..\bin_x64\resource\test_shader.glvs">
       <Filter>resource</Filter>
     </None>
   </ItemGroup>

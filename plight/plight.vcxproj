@@ -28,6 +28,7 @@
     <ClCompile Include="source\main\window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\common\math.h" />
     <ClInclude Include="include\common\matrix.h" />
     <ClInclude Include="include\common\string.h" />
     <ClInclude Include="include\common\time.h" />

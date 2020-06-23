@@ -1,6 +1,7 @@
 #include "labyrinth/include/system/movement.h"
 
 #include "labyrinth/include/component/position.h"
+#include "labyrinth/include/component/velocity.h"
 
 #include "plight/include/common/time.h"
 
@@ -13,14 +14,12 @@ namespace Labyrinth::System::Movement
         Move all entities based on elapsed time
     */
     void
-    update(entt::registry& rRegistry,
-           Plight::Time const& rDelta)
+    update(entt::registry& rRegistry)
     {
-        rRegistry.view<Component::Position>().each([&](auto const entity, auto& rPosition)
+        rRegistry.view<Component::Velocity>().each([&](auto& rVelocity)
                                                    {
-                                                       rPosition.m_x = static_cast<float>(sin(2.0f * rDelta.m_seconds) / 2.0f);
-                                                       rPosition.m_y = static_cast<float>(cos(3.0f * rDelta.m_seconds) / 2.0f);
-                                                       rRegistry.replace<Component::Position>(entity, rPosition);
+                                                       rVelocity.m_delta[0] += 1;
+                                                       rVelocity.m_delta[1] += 1;
                                                    });
     }
 }

@@ -157,7 +157,9 @@
   <ItemGroup>
     <ClCompile Include="source\main\application.cpp" />
     <ClCompile Include="source\main\labyrinth.cpp" />
+    <ClCompile Include="source\system\collision.cpp" />
     <ClCompile Include="source\system\movement.cpp" />
+    <ClCompile Include="source\system\position.cpp" />
     <ClCompile Include="source\system\uniform_color.cpp" />
     <ClCompile Include="source\system\uniform_model_view_matrix.cpp" />
   </ItemGroup>
@@ -167,17 +169,22 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\component\collider.h" />
+    <ClInclude Include="include\component\grid_collider.h" />
     <ClInclude Include="include\component\uniform_color.h" />
     <ClInclude Include="include\component\position.h" />
     <ClInclude Include="include\component\uniform_model_view_matrix.h" />
+    <ClInclude Include="include\component\velocity.h" />
     <ClInclude Include="include\main\application.h" />
+    <ClInclude Include="include\system\collision.h" />
     <ClInclude Include="include\system\movement.h" />
+    <ClInclude Include="include\system\position.h" />
     <ClInclude Include="include\system\uniform_color.h" />
     <ClInclude Include="include\system\uniform_model_view_matrix.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\bin_dbg_x64\resource\test_shader.glfs" />
-    <None Include="..\bin_dbg_x64\resource\test_shader.glvs" />
+    <None Include="..\bin_x64\resource\test_shader.glfs" />
+    <None Include="..\bin_x64\resource\test_shader.glvs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -7,7 +7,7 @@ namespace Plight
     struct Time;
 }
 
-namespace Labyrinth::System::Movement
+namespace Labyrinth::System::Position
 {
     /*
         System for moving entities around based on velocity

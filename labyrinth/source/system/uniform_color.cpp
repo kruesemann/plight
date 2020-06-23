@@ -17,7 +17,7 @@ namespace Labyrinth::System::UniformColor
     */
     void
     update(entt::registry& rRegistry,
-           Plight::Time const& rDelta)
+           Plight::Time const& rTime)
     {
         static Plight::Vector<float, 4> color(std::array<float, 4>{1.0f, 0.0f, 1.0f, 1.0f});
         rRegistry.view<Component::Position,
@@ -25,9 +25,9 @@ namespace Labyrinth::System::UniformColor
                                                        {
                                                            Plight::Graphics::UniformBufferUpdateData<float> update;
                                                            update.m_data[0] = 1.0f;
-                                                           update.m_data[1] = static_cast<float>(cos(rDelta.m_seconds) / 2.0f + 0.5f);
-                                                           update.m_data[2] = static_cast<float>(sin(rDelta.m_seconds) / 2.0f + 0.5f);
-                                                           update.m_data[3] = static_cast<float>(sin(rDelta.m_seconds) / 2.0f + 0.5f);
+                                                           update.m_data[1] = static_cast<float>(cos(rTime.m_ms) / 2.0f + 0.5f);
+                                                           update.m_data[2] = static_cast<float>(sin(rTime.m_ms) / 2.0f + 0.5f);
+                                                           update.m_data[3] = static_cast<float>(sin(rTime.m_ms) / 2.0f + 0.5f);
                                                            rColorUniform.m_uniformBufferData.m_floatUpdateData = {update};
                                                        
                                                            Plight::Graphics::updateUniformBuffer(rColorUniform.m_uniformBufferData);

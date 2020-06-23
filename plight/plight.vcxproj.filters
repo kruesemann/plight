@@ -107,5 +107,8 @@
     <ClInclude Include="include\graphics\shader.h">
       <Filter>include\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="include\common\math.h">
+      <Filter>include\common</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
