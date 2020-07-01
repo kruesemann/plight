@@ -211,20 +211,56 @@ namespace Plight::Graphics
                 throw std::exception(String("Graphics error: Failed to retrieve %'s location.")
                                      .arg(rInfo.m_name).c_str());
 
-            // Create uniform buffer
-            static unsigned int bindingPoint = 0;
+            static std::unordered_map<std::string, UniformBufferObjectData> uniformBlockBufferObjectDataMap;
+            unsigned int bindingPoint = 0;
+
+            auto const itBufferObject = uniformBlockBufferObjectDataMap.find(rInfo.m_name);
+            if (itBufferObject == uniformBlockBufferObjectDataMap.end())
+            {
+                auto const uniformBufferObjectData = createUniformBuffer(rInfo);
+                uniformBlockBufferObjectDataMap.emplace(rInfo.m_name, uniformBufferObjectData);
+                bindingPoint = uniformBufferObjectData.m_bindingPoint;
+                rData.m_uniformBufferObject = uniformBufferObjectData.m_uniformBufferObject;
+            }
+            else if (itBufferObject->second.m_byteSize != rInfo.m_byteSize)
+            {
+                throw std::exception(String("Graphics error: Inconsistent shared buffer size (%: % vs %).")
+                                     .arg(rInfo.m_name)
+                                     .arg(rInfo.m_byteSize)
+                                     .arg(itBufferObject->second.m_byteSize).c_str());
+            }
+            else
+            {
+                bindingPoint = itBufferObject->second.m_bindingPoint;
+                rData.m_uniformBufferObject = itBufferObject->second.m_uniformBufferObject;
+            }
 
             glUniformBlockBinding(programId, location, bindingPoint);
 
-            glGenBuffers(1, &rData.m_uniformBufferObject);
-
-            glBindBuffer(GL_UNIFORM_BUFFER, rData.m_uniformBufferObject);
-            glBufferData(GL_UNIFORM_BUFFER, rInfo.m_byteSize, NULL, GL_STATIC_DRAW);
-
-            glBindBufferRange(GL_UNIFORM_BUFFER, bindingPoint, rData.m_uniformBufferObject, 0, rInfo.m_byteSize);
-            ++bindingPoint;
         }
 
+        return result;
+    }
+
+    /*
+        Creates given uniform buffer
+    */
+    ShaderManager::UniformBufferObjectData
+    ShaderManager::createUniformBuffer(Graphics::UniformBufferInfo const& rInfo)
+    {
+        static unsigned int nextBindingPoint = 0;
+
+        UniformBufferObjectData result;
+        result.m_bindingPoint = nextBindingPoint;
+
+        glGenBuffers(1, &result.m_uniformBufferObject);
+
+        glBindBuffer(GL_UNIFORM_BUFFER, result.m_uniformBufferObject);
+        glBufferData(GL_UNIFORM_BUFFER, rInfo.m_byteSize, NULL, GL_STATIC_DRAW);
+
+        glBindBufferRange(GL_UNIFORM_BUFFER, result.m_bindingPoint, result.m_uniformBufferObject, 0, rInfo.m_byteSize);
+
+        ++nextBindingPoint;
         return result;
     }
 }

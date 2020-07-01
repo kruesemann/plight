@@ -100,7 +100,7 @@ namespace Plight::Graphics
         // Use shader
         glUseProgram(rRenderData.m_shaderProgramId);
 
-        for (auto& rUniformBufferUpdate : rRenderData.m_uniformBufferUpdates)
+        for (auto const& rUniformBufferUpdate : rRenderData.m_uniformBufferUpdates)
             updateUniformBuffer(rUniformBufferUpdate);
         rRenderData.m_uniformBufferUpdates.clear();
 
@@ -112,7 +112,6 @@ namespace Plight::Graphics
     GLenum
     Renderer::getGlBlendFactor(EBlendFactor const& rBlendFactor)
     {
-
         switch (rBlendFactor)
         {
         case EBlendFactor::Zero:

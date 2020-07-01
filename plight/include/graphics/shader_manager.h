@@ -37,17 +37,34 @@ namespace Plight::Graphics
             Fragment
         };
 
-        static unsigned int    createProgram(String const&);
+        /*
+            Data for uniform buffer creation
+        */
+        struct UniformBufferObjectData
+        {
+            // OpenGL-internal uniform buffer object
+            unsigned int        m_uniformBufferObject = 0;
 
-        static unsigned int    createShaderFromString(String const&, EShaderType);
+            // OpenGL-internal binding point between shader uniform block and uniform buffer object
+            unsigned int        m_bindingPoint = 0;
 
-        static String          readStringFromFile(String const&);
+            // Raw size (in bytes) of the uniform block
+            size_t              m_byteSize = 0;
+        };
 
-        static String          getShaderLog(unsigned int);
-        static String          getProgramLog(unsigned int);
+        static unsigned int     createProgram(String const&);
+
+        static unsigned int     createShaderFromString(String const&, EShaderType);
+
+        static String           readStringFromFile(String const&);
+
+        static String           getShaderLog(unsigned int);
+        static String           getProgramLog(unsigned int);
 
         static std::unordered_map<std::string, Component::UniformBufferData> createUniformBuffers(unsigned int,
                                                                                                   std::vector<Graphics::UniformBufferInfo> const&);
+
+        static UniformBufferObjectData createUniformBuffer(Graphics::UniformBufferInfo const&);
 
         // Map between shader names and data
         std::unordered_map<std::string, Shader> m_shaderMap;

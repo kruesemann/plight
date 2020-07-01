@@ -337,9 +337,5 @@ namespace Labyrinth
                 std::cout << "HEAL(" << lastHitPoints << ")\n";
             lastHitPoints = currentHitPoints;
         }
-
-        registry.destroy(mapEntity);
-        registry.destroy(playerEntity);
-        registry.destroy(enemyEntity);
     }
 }
