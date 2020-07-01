@@ -2,6 +2,7 @@
 
 #include "labyrinth/include/component/collider.h"
 #include "labyrinth/include/component/grid_collider.h"
+#include "labyrinth/include/component/hit_points.h"
 #include "labyrinth/include/component/player.h"
 #include "labyrinth/include/component/position.h"
 #include "labyrinth/include/component/tile_map.h"
@@ -87,6 +88,7 @@ namespace Labyrinth
         registry.assign<Component::Player>(playerEntity);
         registry.assign<Component::Position>(playerEntity);
         registry.assign<Component::Velocity>(playerEntity);
+        registry.assign<Component::HitPoints>(playerEntity, 1000);
         registry.assign<Component::Collider>(playerEntity, Component::Collider{std::vector<Component::ColliderRectangle>{Component::ColliderRectangle{{-5000, -5000}, {10000, 10000}}},
                                                                                {10000, 10000}});
         //registry.assign<Component::Collider>(playerEntity, Component::Collider{std::vector<Component::ColliderRectangle>{Component::ColliderRectangle{{-10000, -10000}, {20000, 20000}}},
@@ -247,13 +249,15 @@ namespace Labyrinth
             return true;
         };
 
+        int lastHitPoints = 1000;
+
         while (window.pollEvents())
         {
             auto const now = Plight::Time::now();
             auto const delta = now - timestamp;
             timestamp = now;
 
-            if (timestamp - lastSecond >= 1000.0f)
+            if (timestamp - lastSecond >= 1000.0)
             {
                 std::cout << frameCount << " fps\n";
                 frameCount = 0;
@@ -276,13 +280,13 @@ namespace Labyrinth
             if (rVelocity.m_delta[0] != 0 && rVelocity.m_delta[1] != 0)
             {
                 static auto const norm = std::sqrt(0.5);
-                rVelocity.m_delta[0] *= static_cast<int>(100.0f * delta * norm);
-                rVelocity.m_delta[1] *= static_cast<int>(100.0f * delta * norm);
+                rVelocity.m_delta[0] *= static_cast<int>(100.0 * delta * norm);
+                rVelocity.m_delta[1] *= static_cast<int>(100.0 * delta * norm);
             }
             else
             {
-                rVelocity.m_delta[0] *= static_cast<int>(100.0f * delta);
-                rVelocity.m_delta[1] *= static_cast<int>(100.0f * delta);
+                rVelocity.m_delta[0] *= static_cast<int>(100.0 * delta);
+                rVelocity.m_delta[1] *= static_cast<int>(100.0 * delta);
             }
 
             auto const& rEnemyPosition = registry.get<Component::Position>(enemyEntity);
@@ -308,7 +312,7 @@ namespace Labyrinth
             }
 
             //System::Movement::update(registry);
-            System::Collision::update(registry);
+            System::Collision::update(registry, delta);
             System::Position::update(registry);
             System::UniformModelViewMatrix::update(registry);
             System::UniformColor::update(registry, path);
@@ -320,6 +324,18 @@ namespace Labyrinth
             window.update();
 
             ++frameCount;
+
+            auto const currentHitPoints = registry.get<Component::HitPoints>(playerEntity).m_value;
+            if (currentHitPoints < 0)
+            {
+                std::cout << "DEATH\n";
+                break;
+            }
+            else if (currentHitPoints < lastHitPoints)
+                std::cout << "OUCHIE(" << currentHitPoints << ")\n";
+            else if (currentHitPoints > lastHitPoints)
+                std::cout << "HEAL(" << lastHitPoints << ")\n";
+            lastHitPoints = currentHitPoints;
         }
 
         registry.destroy(mapEntity);

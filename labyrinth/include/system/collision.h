@@ -8,5 +8,6 @@ namespace Labyrinth::System::Collision
         System for resolving collisions between entities
     */
 
-    void                        update(entt::registry&);
+    void                        update(entt::registry&,
+                                       double);
 }

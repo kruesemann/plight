@@ -2,6 +2,7 @@
 
 #include "labyrinth/include/component/collider.h"
 #include "labyrinth/include/component/grid_collider.h"
+#include "labyrinth/include/component/hit_points.h"
 #include "labyrinth/include/component/player.h"
 #include "labyrinth/include/component/position.h"
 #include "labyrinth/include/component/velocity.h"
@@ -199,7 +200,8 @@ namespace Labyrinth::System::Collision
         Resolve all collisions
     */
     void
-    update(entt::registry& rRegistry)
+    update(entt::registry& rRegistry,
+           double delta)
     {
         rRegistry.view<Component::Position,
                        Component::Velocity,
@@ -222,7 +224,7 @@ namespace Labyrinth::System::Collision
                                                                                                       });
                                                    });
 
-        auto const detectCollisions = [&](auto const& rPositionLhs, auto& rVelocityLhs, auto const& rColliderLhs, auto const& /* rPlayer */)
+        auto const detectCollisions = [&](auto const& rPositionLhs, auto const& rVelocityLhs, auto const& rColliderLhs, auto const& /* rPlayer */, auto& rHitPoints)
         {
             rRegistry.view<Component::Position,
                            Component::Velocity,
@@ -238,7 +240,7 @@ namespace Labyrinth::System::Collision
                                                                                                                        rPositionRhs.m_value[1] + rVelocityRhs.m_delta[1],
                                                                                                                        rLhsColliderRectangle, rRhsColliderRectangle))
                                                                                                    {
-                                                                                                       // Collision!
+                                                                                                       rHitPoints.m_value -= static_cast<int>(delta);
                                                                                                    }
                                                                                                }
                                                                                            }
@@ -247,6 +249,7 @@ namespace Labyrinth::System::Collision
         rRegistry.view<Component::Position,
                        Component::Velocity,
                        Component::Collider,
-                       Component::Player>().each(detectCollisions);
+                       Component::Player,
+                       Component::HitPoints>().each(detectCollisions);
     }
 }

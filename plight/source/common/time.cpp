@@ -11,6 +11,6 @@ namespace Plight
     Time
     Time::now()
     {
-        return {1000.0f * glfwGetTime()};
+        return {1000.0 * glfwGetTime()};
     }
 }

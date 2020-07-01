@@ -113,6 +113,9 @@
     <ClInclude Include="include\component\player.h">
       <Filter>include\component</Filter>
     </ClInclude>
+    <ClInclude Include="include\component\hit_points.h">
+      <Filter>include\component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin_dbg_x64\resource\test_shader.glfs">
