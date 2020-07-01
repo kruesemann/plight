@@ -8,6 +8,6 @@ namespace Labyrinth::Component
     */
     struct Position
     {
-        int                     m_value[3] = {0, 0, 0};
+        int                     m_value[2] = {0, 0};
     };
 }

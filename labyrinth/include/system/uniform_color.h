@@ -1,10 +1,12 @@
 #pragma once
 #include "entt/src/entt/fwd.hpp"
 
+#include <vector>
 
-namespace Plight
+
+namespace Labyrinth::Component
 {
-    struct Time;
+    struct Position;
 }
 
 namespace Labyrinth::System::UniformColor
@@ -14,5 +16,5 @@ namespace Labyrinth::System::UniformColor
     */
 
     void                    update(entt::registry&,
-                                   Plight::Time const&);
+                                   std::vector<Component::Position> const&);
 }

@@ -3,7 +3,6 @@
 #include "labyrinth/include/component/position.h"
 #include "labyrinth/include/component/uniform_color.h"
 
-#include "plight/include/common/time.h"
 #include "plight/include/common/vector.h"
 #include "plight/include/graphics/update_uniform_buffer.h"
 
@@ -13,23 +12,31 @@
 namespace Labyrinth::System::UniformColor
 {
     /*
-        Update all uniforms "u_color" based on elapsed time
+        Update all uniforms "u_path" based on the given path
     */
     void
     update(entt::registry& rRegistry,
-           Plight::Time const& rTime)
+           std::vector<Component::Position> const& rPath)
     {
-        static Plight::Vector<float, 4> color(std::array<float, 4>{1.0f, 0.0f, 1.0f, 1.0f});
         rRegistry.view<Component::Position,
                        Component::UniformColor>().each([&](auto const& rPosition, auto& rColorUniform)
                                                        {
                                                            Plight::Graphics::UniformBufferUpdateData<float> update;
-                                                           update.m_data[0] = 1.0f;
-                                                           update.m_data[1] = static_cast<float>(cos(rTime.m_ms) / 2.0f + 0.5f);
-                                                           update.m_data[2] = static_cast<float>(sin(rTime.m_ms) / 2.0f + 0.5f);
-                                                           update.m_data[3] = static_cast<float>(sin(rTime.m_ms) / 2.0f + 0.5f);
+                                                           for (auto const& rPathPosition : rPath)
+                                                           {
+                                                               update.m_data.emplace_back(static_cast<float>(rPathPosition.m_value[0]));
+                                                               update.m_data.emplace_back(static_cast<float>(rPathPosition.m_value[1]));
+                                                               update.m_data.emplace_back(0.0f);
+                                                               update.m_data.emplace_back(0.0f);
+                                                           }
+                                                           for (size_t i = 0; i < 20 - rPath.size(); ++i)
+                                                           {
+                                                               update.m_data.emplace_back(0.0f);
+                                                               update.m_data.emplace_back(0.0f);
+                                                               update.m_data.emplace_back(0.0f);
+                                                               update.m_data.emplace_back(0.0f);
+                                                           }
                                                            rColorUniform.m_uniformBufferData.m_floatUpdateData = {update};
-                                                       
                                                            Plight::Graphics::updateUniformBuffer(rColorUniform.m_uniformBufferData);
                                                        });
     }

@@ -2,6 +2,7 @@
 
 #include "labyrinth/include/component/collider.h"
 #include "labyrinth/include/component/grid_collider.h"
+#include "labyrinth/include/component/player.h"
 #include "labyrinth/include/component/position.h"
 #include "labyrinth/include/component/velocity.h"
 
@@ -219,29 +220,33 @@ namespace Labyrinth::System::Collision
                                                                                                                       rGridPosition,
                                                                                                                       rGridCollider);
                                                                                                       });
-                                                   
-                                                       rRegistry.view<Component::Position,
-                                                                      Component::Velocity,
-                                                                      Component::Collider>().each([&](auto const entityRhs, auto const& rPositionRhs, auto const& rVelocityRhs, auto const& rColliderRhs)
-                                                                                                  {
-                                                                                                      if (entityLhs >= entityRhs)
-                                                                                                          return;
-                                           
-                                                                                                      for (auto const& rLhsColliderRectangle : rColliderLhs.m_colliderRectangles)
-                                                                                                      {
-                                                                                                          for (auto const& rRhsColliderRectangle : rColliderRhs.m_colliderRectangles)
-                                                                                                          {
-                                                                                                              if (detectCollision(rPositionLhs.m_value[0] + rVelocityLhs.m_delta[0],
-                                                                                                                                  rPositionLhs.m_value[1] + rVelocityLhs.m_delta[1],
-                                                                                                                                  rPositionRhs.m_value[0] + rVelocityRhs.m_delta[0],
-                                                                                                                                  rPositionRhs.m_value[1] + rVelocityRhs.m_delta[1],
-                                                                                                                                  rLhsColliderRectangle, rRhsColliderRectangle))
-                                                                                                              {
-                                                                                                                  // Collision!
-                                                                                                              }
-                                                                                                          }
-                                                                                                      }
-                                                                                                  });
                                                    });
+
+        auto const detectCollisions = [&](auto const& rPositionLhs, auto& rVelocityLhs, auto const& rColliderLhs, auto const& /* rPlayer */)
+        {
+            rRegistry.view<Component::Position,
+                           Component::Velocity,
+                           Component::Collider>(entt::exclude<Component::Player>).each([&](auto const& rPositionRhs, auto const& rVelocityRhs, auto const& rColliderRhs)
+                                                                                       {
+                                                                                           for (auto const& rLhsColliderRectangle : rColliderLhs.m_colliderRectangles)
+                                                                                           {
+                                                                                               for (auto const& rRhsColliderRectangle : rColliderRhs.m_colliderRectangles)
+                                                                                               {
+                                                                                                   if (detectCollision(rPositionLhs.m_value[0] + rVelocityLhs.m_delta[0],
+                                                                                                                       rPositionLhs.m_value[1] + rVelocityLhs.m_delta[1],
+                                                                                                                       rPositionRhs.m_value[0] + rVelocityRhs.m_delta[0],
+                                                                                                                       rPositionRhs.m_value[1] + rVelocityRhs.m_delta[1],
+                                                                                                                       rLhsColliderRectangle, rRhsColliderRectangle))
+                                                                                                   {
+                                                                                                       // Collision!
+                                                                                                   }
+                                                                                               }
+                                                                                           }
+                                                                                       });
+        };
+        rRegistry.view<Component::Position,
+                       Component::Velocity,
+                       Component::Collider,
+                       Component::Player>().each(detectCollisions);
     }
 }

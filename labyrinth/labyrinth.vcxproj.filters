@@ -28,6 +28,12 @@
     <Filter Include="include\main">
       <UniqueIdentifier>{94f09280-1b0c-4334-acf5-23c4aa0c8b8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\map">
+      <UniqueIdentifier>{b4a8ed12-10b4-48fe-81e2-5794d0085f53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\map">
+      <UniqueIdentifier>{da0ca420-cf0d-4745-9e8f-2336ecd4d2a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main\labyrinth.cpp">
@@ -50,6 +56,9 @@
     </ClCompile>
     <ClCompile Include="source\system\position.cpp">
       <Filter>source\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\map\path_finding.cpp">
+      <Filter>source\map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -89,12 +98,27 @@
     <ClInclude Include="include\component\collider.h">
       <Filter>include\component</Filter>
     </ClInclude>
+    <ClInclude Include="include\map\path_finding.h">
+      <Filter>include\map</Filter>
+    </ClInclude>
+    <ClInclude Include="include\map\tile.h">
+      <Filter>include\map</Filter>
+    </ClInclude>
+    <ClInclude Include="include\component\tile_map.h">
+      <Filter>include\component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\map\tools.h">
+      <Filter>include\map</Filter>
+    </ClInclude>
+    <ClInclude Include="include\component\player.h">
+      <Filter>include\component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\bin_x64\resource\test_shader.glfs">
+    <None Include="..\bin_dbg_x64\resource\test_shader.glfs">
       <Filter>resource</Filter>
     </None>
-    <None Include="..\bin_x64\resource\test_shader.glvs">
+    <None Include="..\bin_dbg_x64\resource\test_shader.glvs">
       <Filter>resource</Filter>
     </None>
   </ItemGroup>
