@@ -21,9 +21,12 @@
 #include "plight/include/common/math.h"
 #include "plight/include/common/time.h"
 
+#include "plight/include/component/uniform_buffer_data.h"
+
 #include "plight/include/main/window.h"
 
 #include "plight/include/graphics/attribute.h"
+#include "plight/include/graphics/camera.h"
 #include "plight/include/graphics/render_data_factory.h"
 #include "plight/include/graphics/renderer.h"
 #include "plight/include/graphics/shader_manager.h"
@@ -76,13 +79,24 @@ namespace Labyrinth
                                   Plight::Graphics::EBlendFactor::OneMinusCurrentAlpha);
         renderer.setEnableAlphaBlending(true);
 
-        Plight::String const modelViewMatrixUniformName("b_modelViewMatrix");
+        Plight::String const cameraMatricesUniformBlockName("b_cameraMatrices");
+        Plight::String const modelViewMatrixUniformBlockName("b_modelViewMatrix");
         Plight::String const pathUniformName("b_path");
-        auto const& rShader = shaderManager.getOrCreateShader(Plight::String("test_shader"),
-                                                              {Plight::Graphics::UniformBufferInfo(modelViewMatrixUniformName,
-                                                                                                   16 * sizeof(float)),
-                                                               Plight::Graphics::UniformBufferInfo(pathUniformName,
-                                                                                                   80 * sizeof(float))});
+        Plight::Graphics::UniformBufferInfo cameraMatricesUniformBufferInfo(cameraMatricesUniformBlockName,
+                                                                            32 * sizeof(float),
+                                                                            true /* shareBetweenShaders */);
+        Plight::Graphics::UniformBufferInfo modelViewMatrixUniformBufferInfo(modelViewMatrixUniformBlockName,
+                                                                             16 * sizeof(float));
+        auto const& rPlayerShader = shaderManager.getOrCreateShader(Plight::String("test_shader_player"),
+                                                                    {cameraMatricesUniformBufferInfo,
+                                                                     modelViewMatrixUniformBufferInfo});
+        auto const& rMapShader = shaderManager.getOrCreateShader(Plight::String("test_shader_map"),
+                                                                 {cameraMatricesUniformBufferInfo,
+                                                                  modelViewMatrixUniformBufferInfo,
+                                                                  Plight::Graphics::UniformBufferInfo(pathUniformName,
+                                                                                                      80 * sizeof(float))});
+
+        auto uniformBufferData = rMapShader.m_uniformBufferDataMap.at(cameraMatricesUniformBlockName);
 
         auto playerEntity = registry.create();
         registry.assign<Component::Player>(playerEntity);
@@ -111,12 +125,12 @@ namespace Labyrinth
         std::vector<int> playerIndices = {0, 1, 3, 1, 2, 3};
 
         registry.assign<Plight::Component::RenderData>(playerEntity,
-                                                       Plight::Graphics::RenderDataFactory::create(rShader,
+                                                       Plight::Graphics::RenderDataFactory::create(rPlayerShader,
                                                                                                    playerAttributes,
                                                                                                    playerIndices));
 
         Component::UniformModelViewMatrix playerUniformModelViewMatrix;
-        playerUniformModelViewMatrix.m_uniformBufferData = rShader.m_uniformBufferDataMap.at(modelViewMatrixUniformName);
+        playerUniformModelViewMatrix.m_uniformBufferData = rPlayerShader.m_uniformBufferDataMap.at(modelViewMatrixUniformBlockName);
         registry.assign<Component::UniformModelViewMatrix>(playerEntity, playerUniformModelViewMatrix);
 
 
@@ -126,12 +140,12 @@ namespace Labyrinth
         rPosition.m_value[1] = -50000;
         registry.assign<Component::Velocity>(mapEntity);
         Component::UniformColor mapUniformPath;
-        mapUniformPath.m_uniformBufferData = rShader.m_uniformBufferDataMap.at(pathUniformName);
+        mapUniformPath.m_uniformBufferData = rMapShader.m_uniformBufferDataMap.at(pathUniformName);
         registry.assign<Component::UniformColor>(mapEntity, mapUniformPath);
 
         Component::TileMap tileMap;
-        tileMap.m_width = 10;
-        tileMap.m_height = 10;
+        tileMap.m_width = 100;
+        tileMap.m_height = 100;
         tileMap.m_tileWidth = 10000;
         tileMap.m_tileHeight = 10000;
         auto& rCollider = registry.assign<Component::GridCollider>(mapEntity);
@@ -187,12 +201,12 @@ namespace Labyrinth
         };
 
         registry.assign<Plight::Component::RenderData>(mapEntity,
-                                                       Plight::Graphics::RenderDataFactory::create(rShader,
+                                                       Plight::Graphics::RenderDataFactory::create(rMapShader,
                                                                                                    attributes,
                                                                                                    indices));
 
         Component::UniformModelViewMatrix uniformModelViewMatrix;
-        uniformModelViewMatrix.m_uniformBufferData = rShader.m_uniformBufferDataMap.at(modelViewMatrixUniformName);
+        uniformModelViewMatrix.m_uniformBufferData = rMapShader.m_uniformBufferDataMap.at(modelViewMatrixUniformBlockName);
         registry.assign<Component::UniformModelViewMatrix>(mapEntity, uniformModelViewMatrix);
 
         auto enemyEntity = registry.create();
@@ -214,12 +228,12 @@ namespace Labyrinth
         std::vector<int> enemyIndices = {0, 1, 3, 1, 2, 3};
 
         registry.assign<Plight::Component::RenderData>(enemyEntity,
-                                                       Plight::Graphics::RenderDataFactory::create(rShader,
+                                                       Plight::Graphics::RenderDataFactory::create(rPlayerShader,
                                                                                                    enemyAttributes,
                                                                                                    enemyIndices));
 
         Component::UniformModelViewMatrix enemyUniformModelViewMatrix;
-        enemyUniformModelViewMatrix.m_uniformBufferData = rShader.m_uniformBufferDataMap.at(modelViewMatrixUniformName);
+        enemyUniformModelViewMatrix.m_uniformBufferData = rPlayerShader.m_uniformBufferDataMap.at(modelViewMatrixUniformBlockName);
         registry.assign<Component::UniformModelViewMatrix>(enemyEntity, enemyUniformModelViewMatrix);
 
         System::UniformModelViewMatrix::initialize(registry);
@@ -290,11 +304,12 @@ namespace Labyrinth
             }
 
             auto const& rEnemyPosition = registry.get<Component::Position>(enemyEntity);
+            auto const& rPlayerPosition = registry.get<Component::Position>(playerEntity);
             if (path.empty())
                 path = Map::findShortestPath(tileMap,
                                              registry.get<Component::Position>(mapEntity),
                                              rEnemyPosition,
-                                             registry.get<Component::Position>(playerEntity),
+                                             rPlayerPosition,
                                              allowedTiles);
             auto& rEnemyVelocity = registry.get<Component::Velocity>(enemyEntity);
             if (!path.empty())
@@ -316,6 +331,19 @@ namespace Labyrinth
             System::Position::update(registry);
             System::UniformModelViewMatrix::update(registry);
             System::UniformColor::update(registry, path);
+
+            auto const windowSize = window.getSize();
+            Plight::Graphics::UniformBufferUpdateData<float> cameraUpdate;
+            cameraUpdate.m_offset = 0;
+            auto const projectionMatrix = Plight::Graphics::compute2DProjectionMatrix(rPlayerPosition.m_value[0], rPlayerPosition.m_value[1]);
+            auto const cameraMatrix = Plight::Graphics::compute2DCameraMatrix(35, 60, windowSize.first, windowSize.second);
+            for (auto value : projectionMatrix.m_data)
+                cameraUpdate.m_data.push_back(value);
+            for (auto value : cameraMatrix.m_data)
+                cameraUpdate.m_data.push_back(value);
+            uniformBufferData.m_floatUpdateData = {cameraUpdate};
+            Plight::Graphics::updateUniformBuffer(uniformBufferData);
+            renderer.setViewport(windowSize.first, windowSize.second);
 
             renderer.clear();
             renderer.render(registry.get<Plight::Component::RenderData>(mapEntity));

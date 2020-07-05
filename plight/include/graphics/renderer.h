@@ -68,6 +68,8 @@ namespace Plight::Graphics
 
         void                    setEnableDepthTesting(bool);
 
+        void                    setViewport(int, int);
+
         void                    clear();
 
         void                    render(Component::RenderData const&);

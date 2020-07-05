@@ -110,5 +110,8 @@
     <ClInclude Include="include\common\math.h">
       <Filter>include\common</Filter>
     </ClInclude>
+    <ClInclude Include="include\graphics\camera.h">
+      <Filter>include\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -22,17 +22,18 @@ namespace Labyrinth::System::UniformColor
                        Component::UniformColor>().each([&](auto const& rPosition, auto& rColorUniform)
                                                        {
                                                            Plight::Graphics::UniformBufferUpdateData<float> update;
-                                                           for (auto const& rPathPosition : rPath)
+                                                           for (size_t i = 0; i < 20; ++i)
                                                            {
-                                                               update.m_data.emplace_back(static_cast<float>(rPathPosition.m_value[0]));
-                                                               update.m_data.emplace_back(static_cast<float>(rPathPosition.m_value[1]));
-                                                               update.m_data.emplace_back(0.0f);
-                                                               update.m_data.emplace_back(0.0f);
-                                                           }
-                                                           for (size_t i = 0; i < 20 - rPath.size(); ++i)
-                                                           {
-                                                               update.m_data.emplace_back(0.0f);
-                                                               update.m_data.emplace_back(0.0f);
+                                                               if (i < rPath.size())
+                                                               {
+                                                                   update.m_data.emplace_back(static_cast<float>(rPath[i].m_value[0]));
+                                                                   update.m_data.emplace_back(static_cast<float>(rPath[i].m_value[1]));
+                                                               }
+                                                               else
+                                                               {
+                                                                   update.m_data.emplace_back(0.0f);
+                                                                   update.m_data.emplace_back(0.0f);
+                                                               }
                                                                update.m_data.emplace_back(0.0f);
                                                                update.m_data.emplace_back(0.0f);
                                                            }

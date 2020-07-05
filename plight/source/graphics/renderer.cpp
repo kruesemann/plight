@@ -82,6 +82,12 @@ namespace Plight::Graphics
             glDisable(GL_DEPTH_TEST);
     }
 
+    void
+    Renderer::setViewport(int width, int height)
+    {
+        glViewport(0, 0, width, height);
+    }
+
     /*
         Clears render buffers
     */

@@ -211,28 +211,37 @@ namespace Plight::Graphics
                 throw std::exception(String("Graphics error: Failed to retrieve %'s location.")
                                      .arg(rInfo.m_name).c_str());
 
-            static std::unordered_map<std::string, UniformBufferObjectData> uniformBlockBufferObjectDataMap;
             unsigned int bindingPoint = 0;
+            if (rInfo.m_shareBetweenShaders)
+            {
+                static std::unordered_map<std::string, UniformBufferObjectData> uniformBlockBufferObjectDataMap;
 
-            auto const itBufferObject = uniformBlockBufferObjectDataMap.find(rInfo.m_name);
-            if (itBufferObject == uniformBlockBufferObjectDataMap.end())
-            {
-                auto const uniformBufferObjectData = createUniformBuffer(rInfo);
-                uniformBlockBufferObjectDataMap.emplace(rInfo.m_name, uniformBufferObjectData);
-                bindingPoint = uniformBufferObjectData.m_bindingPoint;
-                rData.m_uniformBufferObject = uniformBufferObjectData.m_uniformBufferObject;
-            }
-            else if (itBufferObject->second.m_byteSize != rInfo.m_byteSize)
-            {
-                throw std::exception(String("Graphics error: Inconsistent shared buffer size (%: % vs %).")
-                                     .arg(rInfo.m_name)
-                                     .arg(rInfo.m_byteSize)
-                                     .arg(itBufferObject->second.m_byteSize).c_str());
+                auto const itBufferObject = uniformBlockBufferObjectDataMap.find(rInfo.m_name);
+                if (itBufferObject == uniformBlockBufferObjectDataMap.end())
+                {
+                    auto const uniformBufferObjectData = createUniformBuffer(rInfo);
+                    uniformBlockBufferObjectDataMap.emplace(rInfo.m_name, uniformBufferObjectData);
+                    bindingPoint = uniformBufferObjectData.m_bindingPoint;
+                    rData.m_uniformBufferObject = uniformBufferObjectData.m_uniformBufferObject;
+                }
+                else if (itBufferObject->second.m_byteSize != rInfo.m_byteSize)
+                {
+                    throw std::exception(String("Graphics error: Inconsistent shared buffer size (%: % vs %).")
+                                         .arg(rInfo.m_name)
+                                         .arg(rInfo.m_byteSize)
+                                         .arg(itBufferObject->second.m_byteSize).c_str());
+                }
+                else
+                {
+                    bindingPoint = itBufferObject->second.m_bindingPoint;
+                    rData.m_uniformBufferObject = itBufferObject->second.m_uniformBufferObject;
+                }
             }
             else
             {
-                bindingPoint = itBufferObject->second.m_bindingPoint;
-                rData.m_uniformBufferObject = itBufferObject->second.m_uniformBufferObject;
+                auto const uniformBufferObjectData = createUniformBuffer(rInfo);
+                bindingPoint = uniformBufferObjectData.m_bindingPoint;
+                rData.m_uniformBufferObject = uniformBufferObjectData.m_uniformBufferObject;
             }
 
             glUniformBlockBinding(programId, location, bindingPoint);
@@ -252,13 +261,14 @@ namespace Plight::Graphics
 
         UniformBufferObjectData result;
         result.m_bindingPoint = nextBindingPoint;
+        result.m_byteSize = rInfo.m_byteSize;
 
         glGenBuffers(1, &result.m_uniformBufferObject);
 
         glBindBuffer(GL_UNIFORM_BUFFER, result.m_uniformBufferObject);
-        glBufferData(GL_UNIFORM_BUFFER, rInfo.m_byteSize, NULL, GL_STATIC_DRAW);
+        glBufferData(GL_UNIFORM_BUFFER, result.m_byteSize, NULL, GL_STATIC_DRAW);
 
-        glBindBufferRange(GL_UNIFORM_BUFFER, result.m_bindingPoint, result.m_uniformBufferObject, 0, rInfo.m_byteSize);
+        glBindBufferRange(GL_UNIFORM_BUFFER, result.m_bindingPoint, result.m_uniformBufferObject, 0, result.m_byteSize);
 
         ++nextBindingPoint;
         return result;

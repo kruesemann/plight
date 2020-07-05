@@ -38,6 +38,14 @@ namespace Plight
         glfwSetWindowSize(m_pWindow, m_width, m_height);
     }
 
+    std::pair<int, int>
+    Window::getSize() const
+    {
+        std::pair<int, int> result;
+        glfwGetWindowSize(m_pWindow, &result.first, &result.second);
+        return result;
+    }
+
     void
     Window::toggleFullscreen()
     {

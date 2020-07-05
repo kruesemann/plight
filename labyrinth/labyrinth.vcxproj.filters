@@ -118,10 +118,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\bin_dbg_x64\resource\test_shader.glfs">
+    <None Include="..\bin_dbg_x64\resource\test_shader_player.glfs">
       <Filter>resource</Filter>
     </None>
-    <None Include="..\bin_dbg_x64\resource\test_shader.glvs">
+    <None Include="..\bin_dbg_x64\resource\test_shader_player.glvs">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\bin_dbg_x64\resource\test_shader_map.glvs">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\bin_dbg_x64\resource\test_shader_map.glfs">
       <Filter>resource</Filter>
     </None>
   </ItemGroup>

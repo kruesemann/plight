@@ -1,4 +1,5 @@
 #pragma once
+#include <utility>
 
 
 struct GLFWwindow;
@@ -25,6 +26,7 @@ namespace Plight
                                 ~Window();
 
         void                    setSize(unsigned int, unsigned int);
+        std::pair<int, int>     getSize() const;
 
         void                    toggleFullscreen();
 

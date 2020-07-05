@@ -35,6 +35,7 @@
     <ClInclude Include="include\common\vector.h" />
     <ClInclude Include="include\component\render_data.h" />
     <ClInclude Include="include\component\uniform_buffer_data.h" />
+    <ClInclude Include="include\graphics\camera.h" />
     <ClInclude Include="include\graphics\render_data_factory.h" />
     <ClInclude Include="include\graphics\color.h" />
     <ClInclude Include="include\graphics\renderer.h" />
