@@ -2,6 +2,7 @@
 
 #include "plight/include/component/render_data.h"
 
+#include "plight/include/graphics/render_target.h"
 #include "plight/include/graphics/update_uniform_buffer.h"
 
 #include "glew/include/glew.h"
@@ -82,12 +83,6 @@ namespace Plight::Graphics
             glDisable(GL_DEPTH_TEST);
     }
 
-    void
-    Renderer::setViewport(int width, int height)
-    {
-        glViewport(0, 0, width, height);
-    }
-
     /*
         Clears render buffers
     */
@@ -101,8 +96,12 @@ namespace Plight::Graphics
         Render given vertex array with given shader and uniforms to given render target
     */
     void
-    Renderer::render(Component::RenderData const& rRenderData)
+    Renderer::render(Component::RenderData const& rRenderData,
+                     RenderTarget const& rRenderTarget)
     {
+        glBindFramebuffer(GL_FRAMEBUFFER, rRenderTarget.m_framebufferId);
+        glViewport(0, 0, rRenderTarget.m_width, rRenderTarget.m_height);
+
         // Use shader
         glUseProgram(rRenderData.m_shaderProgramId);
 

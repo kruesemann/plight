@@ -10,6 +10,11 @@ namespace Plight
     {
         struct RenderData;
     }
+
+    namespace Graphics
+    {
+        struct RenderTarget;
+    }
 }
 
 namespace Plight::Graphics
@@ -68,11 +73,10 @@ namespace Plight::Graphics
 
         void                    setEnableDepthTesting(bool);
 
-        void                    setViewport(int, int);
-
         void                    clear();
 
-        void                    render(Component::RenderData const&);
+        void                    render(Component::RenderData const&,
+                                       RenderTarget const&);
 
     private:
 

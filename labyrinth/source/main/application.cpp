@@ -268,7 +268,7 @@ namespace Labyrinth
         while (window.pollEvents())
         {
             auto const now = Plight::Time::now();
-            auto const delta = now - timestamp;
+            auto const delta = std::min(now - timestamp, 100.0);
             timestamp = now;
 
             if (timestamp - lastSecond >= 1000.0)
@@ -290,6 +290,8 @@ namespace Labyrinth
                 rVelocity.m_delta[1] -= 1;
             if (window.pollKey(GLFW_KEY_D) == GLFW_PRESS)
                 rVelocity.m_delta[0] += 1;
+            if (window.pollKey(GLFW_KEY_SPACE) == GLFW_PRESS)
+                window.toggleFullscreen();
 
             if (rVelocity.m_delta[0] != 0 && rVelocity.m_delta[1] != 0)
             {
@@ -332,23 +334,22 @@ namespace Labyrinth
             System::UniformModelViewMatrix::update(registry);
             System::UniformColor::update(registry, path);
 
-            auto const windowSize = window.getSize();
+            auto const& rWindowRenderTarget = window.getRenderTarget();
             Plight::Graphics::UniformBufferUpdateData<float> cameraUpdate;
             cameraUpdate.m_offset = 0;
             auto const projectionMatrix = Plight::Graphics::compute2DProjectionMatrix(rPlayerPosition.m_value[0], rPlayerPosition.m_value[1]);
-            auto const cameraMatrix = Plight::Graphics::compute2DCameraMatrix(35, 60, windowSize.first, windowSize.second);
+            auto const cameraMatrix = Plight::Graphics::compute2DCameraMatrix(35, 60, rWindowRenderTarget.m_width, rWindowRenderTarget.m_height);
             for (auto value : projectionMatrix.m_data)
                 cameraUpdate.m_data.push_back(value);
             for (auto value : cameraMatrix.m_data)
                 cameraUpdate.m_data.push_back(value);
             uniformBufferData.m_floatUpdateData = {cameraUpdate};
             Plight::Graphics::updateUniformBuffer(uniformBufferData);
-            renderer.setViewport(windowSize.first, windowSize.second);
 
             renderer.clear();
-            renderer.render(registry.get<Plight::Component::RenderData>(mapEntity));
-            renderer.render(registry.get<Plight::Component::RenderData>(playerEntity));
-            renderer.render(registry.get<Plight::Component::RenderData>(enemyEntity));
+            renderer.render(registry.get<Plight::Component::RenderData>(mapEntity), rWindowRenderTarget);
+            renderer.render(registry.get<Plight::Component::RenderData>(playerEntity), rWindowRenderTarget);
+            renderer.render(registry.get<Plight::Component::RenderData>(enemyEntity), rWindowRenderTarget);
             window.update();
 
             ++frameCount;

@@ -1,4 +1,6 @@
 #pragma once
+#include "plight/include/graphics/render_target.h"
+
 #include <utility>
 
 
@@ -25,10 +27,14 @@ namespace Plight
                                 Window();
                                 ~Window();
 
-        void                    setSize(unsigned int, unsigned int);
-        std::pair<int, int>     getSize() const;
+        void                    setPosition(int, int);
+        void                    setSize(int, int);
+
+        void                    setResolution(int, int);
+        Graphics::RenderTarget const& getRenderTarget() const;
 
         void                    toggleFullscreen();
+        EScreenMode             getScreenMode() const;
 
         void                    setResizable(bool);
 
@@ -75,11 +81,14 @@ namespace Plight
         // Internal GLFW
         Glfw                    m_glfw;
 
-        // Window width (not resolution)
-        unsigned int            m_width = 800;
+        // last window non-fullscreen position
+        int                     m_position[2] = {50, 50};
 
-        // Window height (not resolution)
-        unsigned int            m_height = 600;
+        // last window non-fullscreen size (not resolution)
+        int                     m_size[2] = {800, 600};
+
+        // Render target with width, height and framebuffer id (= 0)
+        Graphics::RenderTarget  m_renderTarget;
 
         // Window options
         Options                 m_options;

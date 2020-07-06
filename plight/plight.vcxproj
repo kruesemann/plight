@@ -23,6 +23,7 @@
     <ClCompile Include="source\common\time.cpp" />
     <ClCompile Include="source\graphics\render_data_factory.cpp" />
     <ClCompile Include="source\graphics\renderer.cpp" />
+    <ClCompile Include="source\graphics\render_target.cpp" />
     <ClCompile Include="source\graphics\shader_manager.cpp" />
     <ClCompile Include="source\graphics\update_uniform_buffer.cpp" />
     <ClCompile Include="source\main\window.cpp" />
@@ -39,6 +40,7 @@
     <ClInclude Include="include\graphics\render_data_factory.h" />
     <ClInclude Include="include\graphics\color.h" />
     <ClInclude Include="include\graphics\renderer.h" />
+    <ClInclude Include="include\graphics\render_target.h" />
     <ClInclude Include="include\graphics\shader.h" />
     <ClInclude Include="include\graphics\shader_manager.h" />
     <ClInclude Include="include\graphics\attribute.h" />
