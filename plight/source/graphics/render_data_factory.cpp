@@ -78,7 +78,7 @@ namespace Plight::Graphics::RenderDataFactory
     {
         Component::RenderData result;
         result.m_shaderProgramId = rShader.m_programId;
-        result.m_vertexVisits = rIndices.size();
+        result.m_vertexVisits = static_cast<int>(rIndices.size());
 
         if (rAttributes.empty())
             return result;
@@ -114,11 +114,11 @@ namespace Plight::Graphics::RenderDataFactory
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, rIndices.size() * sizeof(int), &rIndices[0], GL_STATIC_DRAW);
 
         // Pass attribute meta data to OpenGL
-        auto const vertexSize = static_cast<GLsizei>(vertexDimension * sizeof(float));
+        auto const vertexSize = static_cast<int>(vertexDimension * sizeof(float));
         size_t offset = 0;
         for (auto const& rAttributeInfo : attributeInfos)
         {
-            glVertexAttribPointer(rAttributeInfo.m_location, static_cast<GLint>(rAttributeInfo.m_dimension), GL_FLOAT, GL_FALSE, vertexSize, (void*)offset);
+            glVertexAttribPointer(rAttributeInfo.m_location, static_cast<int>(rAttributeInfo.m_dimension), GL_FLOAT, GL_FALSE, vertexSize, (void*)offset);
             glEnableVertexAttribArray(rAttributeInfo.m_location);
             offset += rAttributeInfo.m_dimension * sizeof(float);
         }
