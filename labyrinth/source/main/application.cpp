@@ -84,53 +84,70 @@ namespace Labyrinth
         Plight::String const cameraMatricesUniformBlockName("b_cameraMatrices");
         Plight::String const modelViewMatrixUniformBlockName("b_modelViewMatrix");
         Plight::String const textureUniformIdentifier("texture");
-        Plight::String const altTextureUniformIdentifier("altTexture");
+        Plight::String const lightTextureUniformIdentifier("lightTexture");
         Plight::String const textureUniformName("u_texture");
-        Plight::String const pathUniformName("b_path");
+        Plight::String const lightTextureUniformName("u_lightTexture");
+        Plight::String const pathUniformBlockName("b_path");
+        Plight::String const dimensionsUniformBlockName("b_dimensions");
         Plight::Graphics::UniformBufferInfo cameraMatricesUniformBufferInfo(cameraMatricesUniformBlockName,
                                                                             32 * sizeof(float),
                                                                             true /* shareBetweenShaders */);
         Plight::Graphics::UniformBufferInfo modelViewMatrixUniformBufferInfo(modelViewMatrixUniformBlockName,
                                                                              16 * sizeof(float));
         Plight::Graphics::TextureData textureData;
-        //textureData.m_data = {
-        //    255,   0,   0, 255,
-        //      0, 255,   0, 255,
-        //      0,   0, 255, 255,
-        //    255, 255,   0, 255
-        //};
-        textureData.m_width = 800;
-        textureData.m_height = 600;
-        Plight::Graphics::TextureData altTextureData;
-        altTextureData.m_data = {
-            255,   0,   0, 255,
-              0, 255,   0, 255,
-              0,   0, 255, 255,
-            255, 255,   0, 255
+        textureData.m_data = {
+            255, 0, 0, 255,
+            0, 255, 0, 255,
+            0, 0, 255, 255,
+            255, 255, 0, 255,
+            0, 255, 0, 255,
+            0, 0, 255, 255,
+            255, 255, 0, 255,
+            255, 0, 0, 255,
+            0, 0, 255, 255,
+            255, 255, 0, 255,
+            255, 0, 0, 255,
+            0, 255, 0, 255,
+            255, 255, 0, 255,
+            255, 0, 0, 255,
+            0, 255, 0, 255,
+            0, 0, 255, 255,
         };
-        altTextureData.m_width = 2;
-        altTextureData.m_height = 2;
+        textureData.m_width = 4;
+        textureData.m_height = 4;
+        Plight::Graphics::TextureData lightTextureData;
+        lightTextureData.m_width = 800;
+        lightTextureData.m_height = 600;
         Plight::Graphics::UniformTextureInfo textureUniformInfo(textureUniformIdentifier,
                                                                 textureUniformName,
                                                                 Plight::Graphics::Texture::create(textureData));
-        Plight::Graphics::UniformTextureInfo altTextureUniformInfo(altTextureUniformIdentifier,
-                                                                   textureUniformName,
-                                                                   Plight::Graphics::Texture::create(altTextureData));
+        Plight::Graphics::UniformTextureInfo lightTextureUniformInfo(lightTextureUniformIdentifier,
+                                                                     lightTextureUniformName,
+                                                                     Plight::Graphics::Texture::create(lightTextureData));
         auto const& rPlayerShader = shaderManager.getOrCreateShader(Plight::String("test_shader_player"),
                                                                     {cameraMatricesUniformBufferInfo,
-                                                                     modelViewMatrixUniformBufferInfo},
+                                                                     modelViewMatrixUniformBufferInfo,
+                                                                     Plight::Graphics::UniformBufferInfo(dimensionsUniformBlockName,
+                                                                                                         4 * sizeof(float))},
                                                                     {textureUniformInfo,
-                                                                     altTextureUniformInfo});
+                                                                     lightTextureUniformInfo});
         auto const& rMapShader = shaderManager.getOrCreateShader(Plight::String("test_shader_map"),
                                                                  {cameraMatricesUniformBufferInfo,
                                                                   modelViewMatrixUniformBufferInfo,
-                                                                  Plight::Graphics::UniformBufferInfo(pathUniformName,
-                                                                                                      80 * sizeof(float))},
-                                                                 {});
+                                                                  Plight::Graphics::UniformBufferInfo(pathUniformBlockName,
+                                                                                                      80 * sizeof(float)),
+                                                                  Plight::Graphics::UniformBufferInfo(dimensionsUniformBlockName,
+                                                                                                      4 * sizeof(float))},
+                                                                 {lightTextureUniformInfo});
+        auto const& rLightShader = shaderManager.getOrCreateShader(Plight::String("test_shader_light"),
+                                                                   {cameraMatricesUniformBufferInfo,
+                                                                    modelViewMatrixUniformBufferInfo},
+                                                                   {});
 
         auto const& rUniformTextureData = rPlayerShader.m_uniformTextureDataMap.at(textureUniformIdentifier);
-        auto const& rUniformAltTextureData = rPlayerShader.m_uniformTextureDataMap.at(altTextureUniformIdentifier);
-        Plight::Graphics::RenderTarget textureRenderTarget(textureUniformInfo.m_texture);
+        auto const& rPlayerUniformLightTextureData = rPlayerShader.m_uniformTextureDataMap.at(lightTextureUniformIdentifier);
+        auto const& rMapUniformLightTextureData = rMapShader.m_uniformTextureDataMap.at(lightTextureUniformIdentifier);
+        Plight::Graphics::RenderTarget lightTextureRenderTarget(lightTextureUniformInfo.m_texture);
         auto uniformBufferData = rMapShader.m_uniformBufferDataMap.at(cameraMatricesUniformBlockName);
 
         auto playerEntity = registry.create();
@@ -168,14 +185,13 @@ namespace Labyrinth
         playerUniformModelViewMatrix.m_uniformBufferData = rPlayerShader.m_uniformBufferDataMap.at(modelViewMatrixUniformBlockName);
         registry.assign<Component::UniformModelViewMatrix>(playerEntity, playerUniformModelViewMatrix);
 
-
         auto mapEntity = registry.create();
         auto& rPosition = registry.assign<Component::Position>(mapEntity);
         rPosition.m_value[0] = -50000;
         rPosition.m_value[1] = -50000;
         registry.assign<Component::Velocity>(mapEntity);
         Component::UniformColor mapUniformPath;
-        mapUniformPath.m_uniformBufferData = rMapShader.m_uniformBufferDataMap.at(pathUniformName);
+        mapUniformPath.m_uniformBufferData = rMapShader.m_uniformBufferDataMap.at(pathUniformBlockName);
         registry.assign<Component::UniformColor>(mapEntity, mapUniformPath);
 
         Component::TileMap tileMap;
@@ -191,11 +207,11 @@ namespace Labyrinth
         std::vector<float> vertices;
         std::vector<float> color;
         std::vector<int> indices;
-        for (int i = 0; i < rCollider.m_dim[1]; ++i)
+        for (int i = 0; i < tileMap.m_height; ++i)
         {
             float const y = static_cast<float>(i);
 
-            for (int j = 0; j < rCollider.m_dim[0]; ++j)
+            for (int j = 0; j < tileMap.m_width; ++j)
             {
                 float const x = static_cast<float>(j);
 
@@ -204,7 +220,7 @@ namespace Labyrinth
                                                  x, y,
                                                  x, y + 1.0f});
 
-                if (i == 0 || i == rCollider.m_dim[1] - 1 || j == 0 || j == rCollider.m_dim[0] - 1 ||
+                if (i == 0 || i == tileMap.m_height - 1 || j == 0 || j == tileMap.m_width - 1 ||
                     (i != 4 && i != 10 && j == 6) ||
                     (i == 7 && j != 30 && j != 2))
                 {
@@ -271,7 +287,43 @@ namespace Labyrinth
         enemyUniformModelViewMatrix.m_uniformBufferData = rPlayerShader.m_uniformBufferDataMap.at(modelViewMatrixUniformBlockName);
         registry.assign<Component::UniformModelViewMatrix>(enemyEntity, enemyUniformModelViewMatrix);
 
+        auto lightEntity = registry.create();
+        registry.assign<Component::Position>(lightEntity);
+        registry.assign<Component::Velocity>(lightEntity);
+        std::vector<Plight::Graphics::Attribute> lightAttributes = {
+            Plight::Graphics::Attribute{Plight::String("a_position"), 2, std::vector<float>{             0.0f,  2.0f,
+                                                                                             std::sqrtf(3.0f), -1.0f,
+                                                                                            -std::sqrtf(3.0f), -1.0f}}
+        };
+        std::vector<int> lightIndices = {0, 1, 2};
+
+        registry.assign<Plight::Component::RenderData>(lightEntity,
+                                                       Plight::Graphics::RenderDataFactory::create(rLightShader,
+                                                                                                   lightAttributes,
+                                                                                                   lightIndices));
+
+        Component::UniformModelViewMatrix lightUniformModelViewMatrix;
+        lightUniformModelViewMatrix.m_uniformBufferData = rLightShader.m_uniformBufferDataMap.at(modelViewMatrixUniformBlockName);
+        registry.assign<Component::UniformModelViewMatrix>(lightEntity, lightUniformModelViewMatrix);
+
         System::UniformModelViewMatrix::initialize(registry);
+
+        Plight::Graphics::UniformBufferUpdateData<float> lightUpdate;
+        lightUpdate.m_offset = 0;
+        float const radius = 10.0f;
+        lightUpdate.m_data = {
+            radius,   0.0f, 0.0f, 0.0f,
+              0.0f, radius, 0.0f, 0.0f,
+              0.0f,   0.0f, 1.0f, 0.0f,
+              0.0f,   0.0f, 0.0f, 1.0f
+        };
+        lightUniformModelViewMatrix.m_uniformBufferData.m_floatUpdateData = {lightUpdate};
+        Plight::Graphics::updateUniformBuffer(lightUniformModelViewMatrix.m_uniformBufferData);
+
+        Plight::Graphics::UniformBufferUpdateData<float> dimensionsUpdate;
+        dimensionsUpdate.m_offset = 0;
+        auto mapUniformBufferData = rMapShader.m_uniformBufferDataMap.at(dimensionsUniformBlockName);
+        auto playerUniformBufferData = rPlayerShader.m_uniformBufferDataMap.at(dimensionsUniformBlockName);
 
         size_t frameCount = 0;
         auto timestamp = Plight::Time::now();
@@ -363,6 +415,22 @@ namespace Labyrinth
                 rEnemyVelocity.m_delta[1] = 0;
             }
 
+            auto& rLightVelocity = registry.get<Component::Velocity>(lightEntity);
+            auto const& rLightPosition = registry.get<Component::Position>(lightEntity);
+            rLightVelocity.m_delta[0] = rLightPosition.m_value[0] < rPlayerPosition.m_value[0] ? 1 : -1;
+            rLightVelocity.m_delta[1] = rLightPosition.m_value[1] < rPlayerPosition.m_value[1] ? 1 : -1;
+            if (rLightVelocity.m_delta[0] != 0 && rLightVelocity.m_delta[1] != 0)
+            {
+                static auto const norm = std::sqrt(0.5);
+                rLightVelocity.m_delta[0] *= static_cast<int>(75.0 * delta * norm);
+                rLightVelocity.m_delta[1] *= static_cast<int>(75.0 * delta * norm);
+            }
+            else
+            {
+                rLightVelocity.m_delta[0] *= static_cast<int>(75.0 * delta);
+                rLightVelocity.m_delta[1] *= static_cast<int>(75.0 * delta);
+            }
+
             //System::Movement::update(registry);
             System::Collision::update(registry, delta);
             System::Position::update(registry);
@@ -381,13 +449,23 @@ namespace Labyrinth
             uniformBufferData.m_floatUpdateData = {cameraUpdate};
             Plight::Graphics::updateUniformBuffer(uniformBufferData);
 
+            dimensionsUpdate.m_data = {
+                static_cast<float>(rWindowRenderTarget.m_width), static_cast<float>(rWindowRenderTarget.m_height)
+            };
+            mapUniformBufferData.m_floatUpdateData = {dimensionsUpdate};
+            Plight::Graphics::updateUniformBuffer(mapUniformBufferData);
+            playerUniformBufferData.m_floatUpdateData = {dimensionsUpdate};
+            Plight::Graphics::updateUniformBuffer(playerUniformBufferData);
+
             renderer.clear();
-            renderer.render(registry.get<Plight::Component::RenderData>(mapEntity), textureRenderTarget);
+            renderer.render(registry.get<Plight::Component::RenderData>(lightEntity), lightTextureRenderTarget);
+            glUseProgram(rMapShader.m_programId);
+            glUniform1i(rMapUniformLightTextureData.m_uniformLocation, rMapUniformLightTextureData.m_textureUnit);
             renderer.render(registry.get<Plight::Component::RenderData>(mapEntity), rWindowRenderTarget);
             glUseProgram(rPlayerShader.m_programId);
             glUniform1i(rUniformTextureData.m_uniformLocation, rUniformTextureData.m_textureUnit);
+            glUniform1i(rPlayerUniformLightTextureData.m_uniformLocation, rPlayerUniformLightTextureData.m_textureUnit);
             renderer.render(registry.get<Plight::Component::RenderData>(playerEntity), rWindowRenderTarget);
-            glUniform1i(rUniformAltTextureData.m_uniformLocation, rUniformAltTextureData.m_textureUnit);
             renderer.render(registry.get<Plight::Component::RenderData>(enemyEntity), rWindowRenderTarget);
             window.update();
 

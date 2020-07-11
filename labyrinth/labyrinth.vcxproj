@@ -190,6 +190,8 @@
     <ClInclude Include="include\system\uniform_model_view_matrix.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\bin_dbg_x64\resource\test_shader_light.glfs" />
+    <None Include="..\bin_dbg_x64\resource\test_shader_light.glvs" />
     <None Include="..\bin_dbg_x64\resource\test_shader_map.glfs" />
     <None Include="..\bin_dbg_x64\resource\test_shader_map.glvs" />
     <None Include="..\bin_dbg_x64\resource\test_shader_player.glfs" />
