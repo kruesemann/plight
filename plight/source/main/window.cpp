@@ -70,6 +70,8 @@ namespace Plight
         case EScreenMode::Windowed:
             m_screenMode = EScreenMode::Fullscreen;
             glfwSetWindowMonitor(m_pWindow, pMonitor, 0, 0, pMonitorMode->width, pMonitorMode->height, pMonitorMode->refreshRate);
+            // Reset VSync
+            glfwSwapInterval(m_options.m_enableVSync ? 1 : 0);
             break;
         case EScreenMode::Fullscreen:
             m_screenMode = EScreenMode::Windowed;
@@ -221,7 +223,5 @@ namespace Plight
                                          if (pWindow->getScreenMode() != EScreenMode::Fullscreen)
                                             pWindow->setPosition(x, y);
                                  });
-
-        toggleFullscreen();
     }
 }
