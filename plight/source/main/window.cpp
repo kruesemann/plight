@@ -20,8 +20,7 @@ namespace Plight
 
     Window::Window()
         : m_renderTarget(m_size[0],
-                         m_size[1],
-                         true /* isDisplay */)
+                         m_size[1])
     {
         initialize();
     }

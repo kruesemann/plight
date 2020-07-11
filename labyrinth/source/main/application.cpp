@@ -91,14 +91,14 @@ namespace Labyrinth
         Plight::Graphics::UniformBufferInfo modelViewMatrixUniformBufferInfo(modelViewMatrixUniformBlockName,
                                                                              16 * sizeof(float));
         Plight::Graphics::TextureData textureData;
-        textureData.m_data = {
-            255,   0,   0, 255,
-              0, 255,   0, 255,
-              0,   0, 255, 255,
-            255, 255,   0, 255
-        };
-        textureData.m_width = 2;
-        textureData.m_height = 2;
+        //textureData.m_data = {
+        //    255,   0,   0, 255,
+        //      0, 255,   0, 255,
+        //      0,   0, 255, 255,
+        //    255, 255,   0, 255
+        //};
+        textureData.m_width = 800;
+        textureData.m_height = 600;
         Plight::Graphics::UniformTextureInfo textureUniformInfo(textureUniformName,
                                                                 Plight::Graphics::Texture::create(textureData));
         auto const& rPlayerShader = shaderManager.getOrCreateShader(Plight::String("test_shader_player"),
@@ -115,6 +115,7 @@ namespace Labyrinth
         auto const& rUniformTextureData = rPlayerShader.m_uniformTextureDataMap.at(textureUniformName);
         glUseProgram(rPlayerShader.m_programId);
         glUniform1i(rUniformTextureData.m_uniformLocation, rUniformTextureData.m_textureUnit);
+        Plight::Graphics::RenderTarget textureRenderTarget(textureUniformInfo.m_texture);
         auto uniformBufferData = rMapShader.m_uniformBufferDataMap.at(cameraMatricesUniformBlockName);
 
         auto playerEntity = registry.create();
@@ -366,6 +367,7 @@ namespace Labyrinth
             Plight::Graphics::updateUniformBuffer(uniformBufferData);
 
             renderer.clear();
+            renderer.render(registry.get<Plight::Component::RenderData>(mapEntity), textureRenderTarget);
             renderer.render(registry.get<Plight::Component::RenderData>(mapEntity), rWindowRenderTarget);
             renderer.render(registry.get<Plight::Component::RenderData>(playerEntity), rWindowRenderTarget);
             renderer.render(registry.get<Plight::Component::RenderData>(enemyEntity), rWindowRenderTarget);
