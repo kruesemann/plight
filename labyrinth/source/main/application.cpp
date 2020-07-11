@@ -83,6 +83,8 @@ namespace Labyrinth
 
         Plight::String const cameraMatricesUniformBlockName("b_cameraMatrices");
         Plight::String const modelViewMatrixUniformBlockName("b_modelViewMatrix");
+        Plight::String const textureUniformIdentifier("texture");
+        Plight::String const altTextureUniformIdentifier("altTexture");
         Plight::String const textureUniformName("u_texture");
         Plight::String const pathUniformName("b_path");
         Plight::Graphics::UniformBufferInfo cameraMatricesUniformBufferInfo(cameraMatricesUniformBlockName,
@@ -99,12 +101,26 @@ namespace Labyrinth
         //};
         textureData.m_width = 800;
         textureData.m_height = 600;
-        Plight::Graphics::UniformTextureInfo textureUniformInfo(textureUniformName,
+        Plight::Graphics::TextureData altTextureData;
+        altTextureData.m_data = {
+            255,   0,   0, 255,
+              0, 255,   0, 255,
+              0,   0, 255, 255,
+            255, 255,   0, 255
+        };
+        altTextureData.m_width = 2;
+        altTextureData.m_height = 2;
+        Plight::Graphics::UniformTextureInfo textureUniformInfo(textureUniformIdentifier,
+                                                                textureUniformName,
                                                                 Plight::Graphics::Texture::create(textureData));
+        Plight::Graphics::UniformTextureInfo altTextureUniformInfo(altTextureUniformIdentifier,
+                                                                   textureUniformName,
+                                                                   Plight::Graphics::Texture::create(altTextureData));
         auto const& rPlayerShader = shaderManager.getOrCreateShader(Plight::String("test_shader_player"),
                                                                     {cameraMatricesUniformBufferInfo,
                                                                      modelViewMatrixUniformBufferInfo},
-                                                                    {textureUniformInfo});
+                                                                    {textureUniformInfo,
+                                                                     altTextureUniformInfo});
         auto const& rMapShader = shaderManager.getOrCreateShader(Plight::String("test_shader_map"),
                                                                  {cameraMatricesUniformBufferInfo,
                                                                   modelViewMatrixUniformBufferInfo,
@@ -112,9 +128,8 @@ namespace Labyrinth
                                                                                                       80 * sizeof(float))},
                                                                  {});
 
-        auto const& rUniformTextureData = rPlayerShader.m_uniformTextureDataMap.at(textureUniformName);
-        glUseProgram(rPlayerShader.m_programId);
-        glUniform1i(rUniformTextureData.m_uniformLocation, rUniformTextureData.m_textureUnit);
+        auto const& rUniformTextureData = rPlayerShader.m_uniformTextureDataMap.at(textureUniformIdentifier);
+        auto const& rUniformAltTextureData = rPlayerShader.m_uniformTextureDataMap.at(altTextureUniformIdentifier);
         Plight::Graphics::RenderTarget textureRenderTarget(textureUniformInfo.m_texture);
         auto uniformBufferData = rMapShader.m_uniformBufferDataMap.at(cameraMatricesUniformBlockName);
 
@@ -190,8 +205,8 @@ namespace Labyrinth
                                                  x, y + 1.0f});
 
                 if (i == 0 || i == rCollider.m_dim[1] - 1 || j == 0 || j == rCollider.m_dim[0] - 1 ||
-                    (i != 4 && j == 6) ||
-                    (i == 7 && j != 2))
+                    (i != 4 && i != 10 && j == 6) ||
+                    (i == 7 && j != 30 && j != 2))
                 {
                     color.insert(color.end(), {0.0f, 0.0f, 0.1f,
                                                0.0f, 0.0f, 0.1f,
@@ -369,7 +384,10 @@ namespace Labyrinth
             renderer.clear();
             renderer.render(registry.get<Plight::Component::RenderData>(mapEntity), textureRenderTarget);
             renderer.render(registry.get<Plight::Component::RenderData>(mapEntity), rWindowRenderTarget);
+            glUseProgram(rPlayerShader.m_programId);
+            glUniform1i(rUniformTextureData.m_uniformLocation, rUniformTextureData.m_textureUnit);
             renderer.render(registry.get<Plight::Component::RenderData>(playerEntity), rWindowRenderTarget);
+            glUniform1i(rUniformAltTextureData.m_uniformLocation, rUniformAltTextureData.m_textureUnit);
             renderer.render(registry.get<Plight::Component::RenderData>(enemyEntity), rWindowRenderTarget);
             window.update();
 

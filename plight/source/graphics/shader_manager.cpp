@@ -276,11 +276,11 @@ namespace Plight::Graphics
 
         for (auto const& rInfo : rUniformTextureInfo)
         {
-            if (result.find(rInfo.m_name) != result.end())
+            if (result.find(rInfo.m_identifier) != result.end())
                 throw std::exception(String("Graphics error: Multiple uniform textures for '%' not allowed.")
-                                     .arg(rInfo.m_name).c_str());
+                                     .arg(rInfo.m_identifier).c_str());
 
-            auto& rData = result[rInfo.m_name];
+            auto& rData = result[rInfo.m_identifier];
             rData.m_textureUnit = rInfo.m_texture.m_textureUnit;
 
             // Find uniform location

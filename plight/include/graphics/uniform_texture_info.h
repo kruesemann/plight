@@ -11,10 +11,15 @@ namespace Plight::Graphics
     */
     struct UniformTextureInfo
     {
-                            UniformTextureInfo(String const& rName,
+                            UniformTextureInfo(String const& rIdentifier,
+                                               String const& rName,
                                                Texture const& rTexture)
-                                : m_name(rName)
+                                : m_identifier(rIdentifier)
+                                , m_name(rName)
                                 , m_texture(rTexture) {}
+
+        // Identifier by which the uniform texture can be retrieved
+        String              m_identifier;
 
         // Name of the uniform texture in the shader
         String              m_name;
