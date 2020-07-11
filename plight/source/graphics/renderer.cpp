@@ -99,7 +99,13 @@ namespace Plight::Graphics
     Renderer::render(Component::RenderData const& rRenderData,
                      RenderTarget const& rRenderTarget)
     {
-        glBindFramebuffer(GL_FRAMEBUFFER, rRenderTarget.m_framebufferId);
+        static unsigned currentFramebufferId = 0;
+        if (currentFramebufferId != rRenderTarget.m_framebufferId)
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, rRenderTarget.m_framebufferId);
+            clear();
+            currentFramebufferId = rRenderTarget.m_framebufferId;
+        }
         glViewport(0, 0, rRenderTarget.m_width, rRenderTarget.m_height);
 
         // Use shader
