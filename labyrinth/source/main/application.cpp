@@ -22,6 +22,7 @@
 #include "plight/include/common/time.h"
 
 #include "plight/include/component/uniform_buffer_data.h"
+#include "plight/include/component/uniform_texture_data.h"
 
 #include "plight/include/main/window.h"
 
@@ -32,6 +33,7 @@
 #include "plight/include/graphics/shader_manager.h"
 #include "plight/include/graphics/update_uniform_buffer.h"
 #include "plight/include/graphics/uniform_buffer_info.h"
+#include "plight/include/graphics/uniform_texture_info.h"
 
 #include "entt/src/entt/entt.hpp"
 
@@ -81,21 +83,38 @@ namespace Labyrinth
 
         Plight::String const cameraMatricesUniformBlockName("b_cameraMatrices");
         Plight::String const modelViewMatrixUniformBlockName("b_modelViewMatrix");
+        Plight::String const textureUniformName("u_texture");
         Plight::String const pathUniformName("b_path");
         Plight::Graphics::UniformBufferInfo cameraMatricesUniformBufferInfo(cameraMatricesUniformBlockName,
                                                                             32 * sizeof(float),
                                                                             true /* shareBetweenShaders */);
         Plight::Graphics::UniformBufferInfo modelViewMatrixUniformBufferInfo(modelViewMatrixUniformBlockName,
                                                                              16 * sizeof(float));
+        Plight::Graphics::TextureData textureData;
+        textureData.m_data = {
+            255,   0,   0, 255,
+              0, 255,   0, 255,
+              0,   0, 255, 255,
+            255, 255,   0, 255
+        };
+        textureData.m_width = 2;
+        textureData.m_height = 2;
+        Plight::Graphics::UniformTextureInfo textureUniformInfo(textureUniformName,
+                                                                Plight::Graphics::Texture::create(textureData));
         auto const& rPlayerShader = shaderManager.getOrCreateShader(Plight::String("test_shader_player"),
                                                                     {cameraMatricesUniformBufferInfo,
-                                                                     modelViewMatrixUniformBufferInfo});
+                                                                     modelViewMatrixUniformBufferInfo},
+                                                                    {textureUniformInfo});
         auto const& rMapShader = shaderManager.getOrCreateShader(Plight::String("test_shader_map"),
                                                                  {cameraMatricesUniformBufferInfo,
                                                                   modelViewMatrixUniformBufferInfo,
                                                                   Plight::Graphics::UniformBufferInfo(pathUniformName,
-                                                                                                      80 * sizeof(float))});
+                                                                                                      80 * sizeof(float))},
+                                                                 {});
 
+        auto const& rUniformTextureData = rPlayerShader.m_uniformTextureDataMap.at(textureUniformName);
+        glUseProgram(rPlayerShader.m_programId);
+        glUniform1i(rUniformTextureData.m_uniformLocation, rUniformTextureData.m_textureUnit);
         auto uniformBufferData = rMapShader.m_uniformBufferDataMap.at(cameraMatricesUniformBlockName);
 
         auto playerEntity = registry.create();
@@ -117,10 +136,10 @@ namespace Labyrinth
             //                                                                                 1.0f, -1.0f,
             //                                                                                -1.0f, -1.0f,
             //                                                                                -1.0f,  1.0f}},
-            Plight::Graphics::Attribute{Plight::String("a_color"), 3, std::vector<float>{1.0f, 1.0f, 0.0f,
-                                                                                         1.0f, 1.0f, 0.0f,
-                                                                                         1.0f, 1.0f, 0.0f,
-                                                                                         1.0f, 1.0f, 0.0f}},
+            Plight::Graphics::Attribute{Plight::String("a_uv"), 2, std::vector<float>{1.0f, 1.0f,
+                                                                                      1.0f, 0.0f,
+                                                                                      0.0f, 0.0f,
+                                                                                      0.0f, 1.0f}},
         };
         std::vector<int> playerIndices = {0, 1, 3, 1, 2, 3};
 
@@ -220,10 +239,10 @@ namespace Labyrinth
                                                                                              0.5f, -0.5f,
                                                                                             -0.5f, -0.5f,
                                                                                             -0.5f,  0.5f}},
-            Plight::Graphics::Attribute{Plight::String("a_color"), 3, std::vector<float>{1.0f, 0.0f, 0.0f,
-                                                                                         1.0f, 0.0f, 0.0f,
-                                                                                         1.0f, 0.0f, 0.0f,
-                                                                                         1.0f, 0.0f, 0.0f}},
+            Plight::Graphics::Attribute{Plight::String("a_uv"), 2, std::vector<float>{1.0f, 1.0f,
+                                                                                      1.0f, 0.0f,
+                                                                                      0.0f, 0.0f,
+                                                                                      0.0f, 1.0f}},
         };
         std::vector<int> enemyIndices = {0, 1, 3, 1, 2, 3};
 
@@ -283,7 +302,7 @@ namespace Labyrinth
             rVelocity.m_delta[1] = 0;
 
             if (window.pollKey(GLFW_KEY_W) == GLFW_PRESS)
-                rVelocity.m_delta[1] += 1; 
+                rVelocity.m_delta[1] += 1;
             if (window.pollKey(GLFW_KEY_A) == GLFW_PRESS)
                 rVelocity.m_delta[0] -= 1;
             if (window.pollKey(GLFW_KEY_S) == GLFW_PRESS)

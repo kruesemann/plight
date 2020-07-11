@@ -25,6 +25,7 @@
     <ClCompile Include="source\graphics\renderer.cpp" />
     <ClCompile Include="source\graphics\render_target.cpp" />
     <ClCompile Include="source\graphics\shader_manager.cpp" />
+    <ClCompile Include="source\graphics\texture.cpp" />
     <ClCompile Include="source\graphics\update_uniform_buffer.cpp" />
     <ClCompile Include="source\main\window.cpp" />
   </ItemGroup>
@@ -36,6 +37,7 @@
     <ClInclude Include="include\common\vector.h" />
     <ClInclude Include="include\component\render_data.h" />
     <ClInclude Include="include\component\uniform_buffer_data.h" />
+    <ClInclude Include="include\component\uniform_texture_data.h" />
     <ClInclude Include="include\graphics\camera.h" />
     <ClInclude Include="include\graphics\render_data_factory.h" />
     <ClInclude Include="include\graphics\color.h" />
@@ -44,7 +46,9 @@
     <ClInclude Include="include\graphics\shader.h" />
     <ClInclude Include="include\graphics\shader_manager.h" />
     <ClInclude Include="include\graphics\attribute.h" />
+    <ClInclude Include="include\graphics\texture.h" />
     <ClInclude Include="include\graphics\uniform_buffer_update_data.h" />
+    <ClInclude Include="include\graphics\uniform_texture_info.h" />
     <ClInclude Include="include\graphics\update_uniform_buffer.h" />
     <ClInclude Include="include\graphics\uniform_buffer_info.h" />
     <ClInclude Include="include\main\window.h" />

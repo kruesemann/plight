@@ -1,13 +1,16 @@
 #include "plight/include/graphics/shader_manager.h"
 
 #include "plight/include/component/uniform_buffer_data.h"
+#include "plight/include/component/uniform_texture_data.h"
 
 #include "plight/include/graphics/uniform_buffer_info.h"
+#include "plight/include/graphics/uniform_texture_info.h"
 
 #include "glew/include/glew.h"
 
 #include <exception>
 #include <fstream>
+#include <iostream>
 
 
 namespace Plight::Graphics
@@ -43,14 +46,24 @@ namespace Plight::Graphics
     */
     Shader const&
     ShaderManager::getOrCreateShader(String const& rName,
-                                     std::vector<Graphics::UniformBufferInfo> const& rUniformBufferInfo)
+                                     std::vector<Graphics::UniformBufferInfo> const& rUniformBufferInfo,
+                                     std::vector<Graphics::UniformTextureInfo> const& rUniformTextureInfo)
     {
         auto const itShader = m_shaderMap.find(rName);
         if (itShader == m_shaderMap.end())
         {
             auto& rShader = m_shaderMap[rName];
-            rShader.m_programId = createProgram(rName);
-            rShader.m_uniformBufferDataMap = createUniformBuffers(rShader.m_programId, rUniformBufferInfo);
+            try
+            {
+                rShader.m_programId = createProgram(rName);
+                rShader.m_uniformBufferDataMap = createUniformBuffers(rShader.m_programId, rUniformBufferInfo);
+                rShader.m_uniformTextureDataMap = createUniformTextures(rShader.m_programId, rUniformTextureInfo);
+            }
+            catch (std::exception const& rError)
+            {
+                std::cout << rError.what() << '\n';
+                throw rError;
+            }
             return rShader;
         }
         return itShader->second;
@@ -193,7 +206,8 @@ namespace Plight::Graphics
         Creates given uniform buffers
     */
     std::unordered_map<std::string, Component::UniformBufferData>
-    ShaderManager::createUniformBuffers(unsigned int programId, std::vector<Graphics::UniformBufferInfo> const& rUniformBufferInfo)
+    ShaderManager::createUniformBuffers(unsigned int programId,
+                                        std::vector<Graphics::UniformBufferInfo> const& rUniformBufferInfo)
     {
         std::unordered_map<std::string, Component::UniformBufferData> result;
 
@@ -246,6 +260,34 @@ namespace Plight::Graphics
 
             glUniformBlockBinding(programId, location, bindingPoint);
 
+        }
+
+        return result;
+    }
+
+    /*
+        Creates given uniform textures
+    */
+    std::unordered_map<std::string, Component::UniformTextureData>
+    ShaderManager::createUniformTextures(unsigned int programId,
+                                         std::vector<Graphics::UniformTextureInfo> const& rUniformTextureInfo)
+    {
+        std::unordered_map<std::string, Component::UniformTextureData> result;
+
+        for (auto const& rInfo : rUniformTextureInfo)
+        {
+            if (result.find(rInfo.m_name) != result.end())
+                throw std::exception(String("Graphics error: Multiple uniform textures for '%' not allowed.")
+                                     .arg(rInfo.m_name).c_str());
+
+            auto& rData = result[rInfo.m_name];
+            rData.m_textureUnit = rInfo.m_texture.m_textureUnit;
+
+            // Find uniform location
+            rData.m_uniformLocation = glGetUniformLocation(programId, rInfo.m_name.c_str());
+            if (rData.m_uniformLocation == GL_INVALID_INDEX)
+                throw std::exception(String("Graphics error: Failed to retrieve %'s location.")
+                                     .arg(rInfo.m_name).c_str());
         }
 
         return result;

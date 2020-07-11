@@ -7,7 +7,7 @@
 namespace Plight::Component
 {
     /*
-        Wrapping component holding everthing needed for updating a shader uniform buffer
+        Wrapping component holding everything needed for updating a shader uniform buffer
         Not intended as an actual component, but member of a uniform-buffer-specific component
     */
     struct UniformBufferData

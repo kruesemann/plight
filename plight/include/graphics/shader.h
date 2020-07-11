@@ -2,14 +2,10 @@
 #include <unordered_map>
 
 
-namespace Plight
+namespace Plight::Component
 {
-    class String;
-
-    namespace Component
-    {
-        struct UniformBufferData;
-    }
+    struct UniformBufferData;
+    struct UniformTextureData;
 }
 
 namespace Plight::Graphics
@@ -24,5 +20,8 @@ namespace Plight::Graphics
 
         // Map between uniform block names and the data of the uniform buffer to which the block is bound
         std::unordered_map<std::string, Component::UniformBufferData> m_uniformBufferDataMap;
+
+        // Map between uniform texture names and the data of the uniform texture to which the uniform is bound
+        std::unordered_map<std::string, Component::UniformTextureData> m_uniformTextureDataMap;
     };
 }

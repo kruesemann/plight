@@ -9,6 +9,7 @@ namespace Plight
     namespace Graphics
     {
         struct UniformBufferInfo;
+        struct UniformTextureInfo;
     }
 }
 
@@ -24,7 +25,8 @@ namespace Plight::Graphics
                                 ~ShaderManager();
 
         Shader const&           getOrCreateShader(String const&,
-                                                  std::vector<Graphics::UniformBufferInfo> const&);
+                                                  std::vector<Graphics::UniformBufferInfo> const&,
+                                                  std::vector<Graphics::UniformTextureInfo> const&);
 
     private:
 
@@ -63,6 +65,9 @@ namespace Plight::Graphics
 
         static std::unordered_map<std::string, Component::UniformBufferData> createUniformBuffers(unsigned int,
                                                                                                   std::vector<Graphics::UniformBufferInfo> const&);
+
+        static std::unordered_map<std::string, Component::UniformTextureData> createUniformTextures(unsigned int,
+                                                                                                    std::vector<Graphics::UniformTextureInfo> const&);
 
         static UniformBufferObjectData createUniformBuffer(Graphics::UniformBufferInfo const&);
 
