@@ -5,7 +5,7 @@
 
 #include "plight/include/common/matrix.h"
 #include "plight/include/component/render_data.h"
-#include "plight/include/graphics/update_uniform_buffer.h"
+#include "plight/include/graphics/update_uniform.h"
 
 #include "entt/src/entt/entt.hpp"
 

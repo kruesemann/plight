@@ -173,6 +173,7 @@
     <ClInclude Include="include\component\collider.h" />
     <ClInclude Include="include\component\grid_collider.h" />
     <ClInclude Include="include\component\hit_points.h" />
+    <ClInclude Include="include\component\light.h" />
     <ClInclude Include="include\component\player.h" />
     <ClInclude Include="include\component\tile_map.h" />
     <ClInclude Include="include\component\uniform_color.h" />

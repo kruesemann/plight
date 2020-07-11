@@ -2,8 +2,9 @@
 
 #include "plight/include/component/render_data.h"
 
+#include "plight/include/graphics/color.h"
 #include "plight/include/graphics/render_target.h"
-#include "plight/include/graphics/update_uniform_buffer.h"
+#include "plight/include/graphics/update_uniform.h"
 
 #include "glew/include/glew.h"
 
@@ -84,6 +85,16 @@ namespace Plight::Graphics
     }
 
     /*
+        Sets framebuffer and viewport
+    */
+    void
+    Renderer::setRenderTarget(RenderTarget const& rRenderTarget)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, rRenderTarget.m_framebufferId);
+        glViewport(0, 0, rRenderTarget.m_width, rRenderTarget.m_height);
+    }
+
+    /*
         Clears render buffers
     */
     void
@@ -96,24 +107,17 @@ namespace Plight::Graphics
         Render given vertex array with given shader and uniforms to given render target
     */
     void
-    Renderer::render(Component::RenderData const& rRenderData,
-                     RenderTarget const& rRenderTarget)
+    Renderer::render(Component::RenderData const& rRenderData)
     {
-        static unsigned currentFramebufferId = 0;
-        if (currentFramebufferId != rRenderTarget.m_framebufferId)
-        {
-            glBindFramebuffer(GL_FRAMEBUFFER, rRenderTarget.m_framebufferId);
-            clear();
-            currentFramebufferId = rRenderTarget.m_framebufferId;
-        }
-        glViewport(0, 0, rRenderTarget.m_width, rRenderTarget.m_height);
-
         // Use shader
         glUseProgram(rRenderData.m_shaderProgramId);
 
         for (auto const& rUniformBufferUpdate : rRenderData.m_uniformBufferUpdates)
             updateUniformBuffer(rUniformBufferUpdate);
         rRenderData.m_uniformBufferUpdates.clear();
+
+        for (auto const& rUniformTextureUpdate : rRenderData.m_uniformTextureUpdates)
+            updateUniformTexture(rUniformTextureUpdate);
 
         // Draw vertices
         glBindVertexArray(rRenderData.m_vertexArrayObject);

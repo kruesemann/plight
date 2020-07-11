@@ -1,5 +1,4 @@
 #pragma once
-#include "plight/include/graphics/color.h"
 
 
 typedef unsigned int GLenum;
@@ -13,6 +12,7 @@ namespace Plight
 
     namespace Graphics
     {
+        struct Color;
         struct RenderTarget;
     }
 }
@@ -73,10 +73,11 @@ namespace Plight::Graphics
 
         void                    setEnableDepthTesting(bool);
 
+        void                    setRenderTarget(RenderTarget const&);
+
         void                    clear();
 
-        void                    render(Component::RenderData const&,
-                                       RenderTarget const&);
+        void                    render(Component::RenderData const&);
 
     private:
 

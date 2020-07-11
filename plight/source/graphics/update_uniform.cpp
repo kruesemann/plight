@@ -1,13 +1,17 @@
 #pragma once
-#include "plight/include/graphics/update_uniform_buffer.h"
+#include "plight/include/graphics/update_uniform.h"
 
 #include "plight/include/component/uniform_buffer_data.h"
+#include "plight/include/component/uniform_texture_data.h"
 
 #include "glew/include/glew.h"
 
 
 namespace Plight::Graphics
 {
+    /*
+        Function for updating shader uniform buffers
+    */
     void
     updateUniformBuffer(Component::UniformBufferData const& rUniformBufferData)
     {
@@ -34,5 +38,14 @@ namespace Plight::Graphics
             updateBuffer(rFloatUpdateData);
         for (auto const& rDoubleUpdateData : rUniformBufferData.m_doubleUpdateData)
             updateBuffer(rDoubleUpdateData);
+    }
+
+    /*
+        Function for updating shader uniform textures
+    */
+    void
+    updateUniformTexture(Component::UniformTextureData const& rUniformTextureData)
+    {
+        glUniform1i(rUniformTextureData.m_uniformLocation, rUniformTextureData.m_textureUnit);
     }
 }

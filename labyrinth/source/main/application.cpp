@@ -3,6 +3,7 @@
 #include "labyrinth/include/component/collider.h"
 #include "labyrinth/include/component/grid_collider.h"
 #include "labyrinth/include/component/hit_points.h"
+#include "labyrinth/include/component/light.h"
 #include "labyrinth/include/component/player.h"
 #include "labyrinth/include/component/position.h"
 #include "labyrinth/include/component/tile_map.h"
@@ -31,9 +32,11 @@
 #include "plight/include/graphics/render_data_factory.h"
 #include "plight/include/graphics/renderer.h"
 #include "plight/include/graphics/shader_manager.h"
-#include "plight/include/graphics/update_uniform_buffer.h"
+#include "plight/include/graphics/update_uniform.h"
 #include "plight/include/graphics/uniform_buffer_info.h"
 #include "plight/include/graphics/uniform_texture_info.h"
+
+#include "plight/include/system/rendering_cpp.h"
 
 #include "entt/src/entt/entt.hpp"
 
@@ -144,9 +147,6 @@ namespace Labyrinth
                                                                     modelViewMatrixUniformBufferInfo},
                                                                    {});
 
-        auto const& rUniformTextureData = rPlayerShader.m_uniformTextureDataMap.at(textureUniformIdentifier);
-        auto const& rPlayerUniformLightTextureData = rPlayerShader.m_uniformTextureDataMap.at(lightTextureUniformIdentifier);
-        auto const& rMapUniformLightTextureData = rMapShader.m_uniformTextureDataMap.at(lightTextureUniformIdentifier);
         Plight::Graphics::RenderTarget lightTextureRenderTarget(lightTextureUniformInfo.m_texture);
         auto uniformBufferData = rMapShader.m_uniformBufferDataMap.at(cameraMatricesUniformBlockName);
 
@@ -176,14 +176,49 @@ namespace Labyrinth
         };
         std::vector<int> playerIndices = {0, 1, 3, 1, 2, 3};
 
-        registry.assign<Plight::Component::RenderData>(playerEntity,
-                                                       Plight::Graphics::RenderDataFactory::create(rPlayerShader,
-                                                                                                   playerAttributes,
-                                                                                                   playerIndices));
+        auto& rPlayerRenderData = registry.assign<Plight::Component::RenderData>(playerEntity,
+                                                                                 Plight::Graphics::RenderDataFactory::create(rPlayerShader,
+                                                                                                                             playerAttributes,
+                                                                                                                             playerIndices));
+        rPlayerRenderData.m_uniformTextureUpdates = {
+            rPlayerShader.m_uniformTextureDataMap.at(textureUniformIdentifier),
+            rPlayerShader.m_uniformTextureDataMap.at(lightTextureUniformIdentifier)
+        };
 
         Component::UniformModelViewMatrix playerUniformModelViewMatrix;
         playerUniformModelViewMatrix.m_uniformBufferData = rPlayerShader.m_uniformBufferDataMap.at(modelViewMatrixUniformBlockName);
         registry.assign<Component::UniformModelViewMatrix>(playerEntity, playerUniformModelViewMatrix);
+
+        auto enemyEntity = registry.create();
+        registry.assign<Component::Position>(enemyEntity, Component::Position{-30000, 0});
+        registry.assign<Component::Velocity>(enemyEntity);
+        registry.assign<Component::Collider>(enemyEntity, Component::Collider{std::vector<Component::ColliderRectangle>{Component::ColliderRectangle{{-5000, -5000}, {10000, 10000}}},
+                                                                              {10000, 10000}});
+
+        std::vector<Plight::Graphics::Attribute> enemyAttributes = {
+            Plight::Graphics::Attribute{Plight::String("a_position"), 2, std::vector<float>{ 0.5f,  0.5f,
+                                                                                             0.5f, -0.5f,
+                                                                                            -0.5f, -0.5f,
+                                                                                            -0.5f,  0.5f}},
+            Plight::Graphics::Attribute{Plight::String("a_uv"), 2, std::vector<float>{1.0f, 1.0f,
+                                                                                      1.0f, 0.0f,
+                                                                                      0.0f, 0.0f,
+                                                                                      0.0f, 1.0f}},
+        };
+        std::vector<int> enemyIndices = {0, 1, 3, 1, 2, 3};
+
+        auto& rEnemyRenderData = registry.assign<Plight::Component::RenderData>(enemyEntity,
+                                                                                Plight::Graphics::RenderDataFactory::create(rPlayerShader,
+                                                                                                                            enemyAttributes,
+                                                                                                                            enemyIndices));
+        rEnemyRenderData.m_uniformTextureUpdates = {
+            rPlayerShader.m_uniformTextureDataMap.at(textureUniformIdentifier),
+            rPlayerShader.m_uniformTextureDataMap.at(lightTextureUniformIdentifier)
+        };
+
+        Component::UniformModelViewMatrix enemyUniformModelViewMatrix;
+        enemyUniformModelViewMatrix.m_uniformBufferData = rPlayerShader.m_uniformBufferDataMap.at(modelViewMatrixUniformBlockName);
+        registry.assign<Component::UniformModelViewMatrix>(enemyEntity, enemyUniformModelViewMatrix);
 
         auto mapEntity = registry.create();
         auto& rPosition = registry.assign<Component::Position>(mapEntity);
@@ -251,43 +286,20 @@ namespace Labyrinth
             Plight::Graphics::Attribute{Plight::String("a_color"), 3, color},
         };
 
-        registry.assign<Plight::Component::RenderData>(mapEntity,
-                                                       Plight::Graphics::RenderDataFactory::create(rMapShader,
-                                                                                                   attributes,
-                                                                                                   indices));
+        auto& rMapRenderData = registry.assign<Plight::Component::RenderData>(mapEntity,
+                                                                              Plight::Graphics::RenderDataFactory::create(rMapShader,
+                                                                                                                          attributes,
+                                                                                                                          indices));
+        rMapRenderData.m_uniformTextureUpdates = {
+            rMapShader.m_uniformTextureDataMap.at(lightTextureUniformIdentifier)
+        };
 
         Component::UniformModelViewMatrix uniformModelViewMatrix;
         uniformModelViewMatrix.m_uniformBufferData = rMapShader.m_uniformBufferDataMap.at(modelViewMatrixUniformBlockName);
         registry.assign<Component::UniformModelViewMatrix>(mapEntity, uniformModelViewMatrix);
 
-        auto enemyEntity = registry.create();
-        registry.assign<Component::Position>(enemyEntity, Component::Position{-30000, 0});
-        registry.assign<Component::Velocity>(enemyEntity);
-        registry.assign<Component::Collider>(enemyEntity, Component::Collider{std::vector<Component::ColliderRectangle>{Component::ColliderRectangle{{-5000, -5000}, {10000, 10000}}},
-                                                                              {10000, 10000}});
-
-        std::vector<Plight::Graphics::Attribute> enemyAttributes = {
-            Plight::Graphics::Attribute{Plight::String("a_position"), 2, std::vector<float>{ 0.5f,  0.5f,
-                                                                                             0.5f, -0.5f,
-                                                                                            -0.5f, -0.5f,
-                                                                                            -0.5f,  0.5f}},
-            Plight::Graphics::Attribute{Plight::String("a_uv"), 2, std::vector<float>{1.0f, 1.0f,
-                                                                                      1.0f, 0.0f,
-                                                                                      0.0f, 0.0f,
-                                                                                      0.0f, 1.0f}},
-        };
-        std::vector<int> enemyIndices = {0, 1, 3, 1, 2, 3};
-
-        registry.assign<Plight::Component::RenderData>(enemyEntity,
-                                                       Plight::Graphics::RenderDataFactory::create(rPlayerShader,
-                                                                                                   enemyAttributes,
-                                                                                                   enemyIndices));
-
-        Component::UniformModelViewMatrix enemyUniformModelViewMatrix;
-        enemyUniformModelViewMatrix.m_uniformBufferData = rPlayerShader.m_uniformBufferDataMap.at(modelViewMatrixUniformBlockName);
-        registry.assign<Component::UniformModelViewMatrix>(enemyEntity, enemyUniformModelViewMatrix);
-
         auto lightEntity = registry.create();
+        registry.assign<Component::Light>(lightEntity);
         registry.assign<Component::Position>(lightEntity);
         registry.assign<Component::Velocity>(lightEntity);
         std::vector<Plight::Graphics::Attribute> lightAttributes = {
@@ -458,15 +470,8 @@ namespace Labyrinth
             Plight::Graphics::updateUniformBuffer(playerUniformBufferData);
 
             renderer.clear();
-            renderer.render(registry.get<Plight::Component::RenderData>(lightEntity), lightTextureRenderTarget);
-            glUseProgram(rMapShader.m_programId);
-            glUniform1i(rMapUniformLightTextureData.m_uniformLocation, rMapUniformLightTextureData.m_textureUnit);
-            renderer.render(registry.get<Plight::Component::RenderData>(mapEntity), rWindowRenderTarget);
-            glUseProgram(rPlayerShader.m_programId);
-            glUniform1i(rUniformTextureData.m_uniformLocation, rUniformTextureData.m_textureUnit);
-            glUniform1i(rPlayerUniformLightTextureData.m_uniformLocation, rPlayerUniformLightTextureData.m_textureUnit);
-            renderer.render(registry.get<Plight::Component::RenderData>(playerEntity), rWindowRenderTarget);
-            renderer.render(registry.get<Plight::Component::RenderData>(enemyEntity), rWindowRenderTarget);
+            Plight::System::Rendering::update<entt::exclude_t<>, Component::Light>(registry, renderer, lightTextureRenderTarget);
+            Plight::System::Rendering::update<entt::exclude_t<Component::Light>>(registry, renderer, rWindowRenderTarget);
             window.update();
 
             ++frameCount;

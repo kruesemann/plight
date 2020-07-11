@@ -1,5 +1,6 @@
 #pragma once
 #include "plight/include/component/uniform_buffer_data.h"
+#include "plight/include/component/uniform_texture_data.h"
 
 
 namespace Plight::Component
@@ -20,5 +21,8 @@ namespace Plight::Component
 
         // Uniform buffers that should be updated before rendering (with update data)
         mutable std::vector<UniformBufferData> m_uniformBufferUpdates;
+
+        // Uniform textures that should be updated before rendering
+        std::vector<UniformTextureData> m_uniformTextureUpdates;
     };
 }

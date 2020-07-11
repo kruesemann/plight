@@ -6,13 +6,17 @@ namespace Plight
     namespace Component
     {
         struct UniformBufferData;
+        struct UniformTextureData;
     }
 }
 
 namespace Plight::Graphics
 {
     /*
-        Function for updating shader uniform buffers
+        Functions for updating shader uniforms
     */
+
     void                        updateUniformBuffer(Component::UniformBufferData const&);
+
+    void                        updateUniformTexture(Component::UniformTextureData const&);
 }

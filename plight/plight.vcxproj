@@ -26,7 +26,7 @@
     <ClCompile Include="source\graphics\render_target.cpp" />
     <ClCompile Include="source\graphics\shader_manager.cpp" />
     <ClCompile Include="source\graphics\texture.cpp" />
-    <ClCompile Include="source\graphics\update_uniform_buffer.cpp" />
+    <ClCompile Include="source\graphics\update_uniform.cpp" />
     <ClCompile Include="source\main\window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -49,9 +49,11 @@
     <ClInclude Include="include\graphics\texture.h" />
     <ClInclude Include="include\graphics\uniform_buffer_update_data.h" />
     <ClInclude Include="include\graphics\uniform_texture_info.h" />
-    <ClInclude Include="include\graphics\update_uniform_buffer.h" />
+    <ClInclude Include="include\graphics\update_uniform.h" />
     <ClInclude Include="include\graphics\uniform_buffer_info.h" />
     <ClInclude Include="include\main\window.h" />
+    <ClInclude Include="include\system\rendering.h" />
+    <ClInclude Include="include\system\rendering_cpp.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
