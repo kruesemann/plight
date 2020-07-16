@@ -4,7 +4,7 @@
 #include "labyrinth/include/component/uniform_color.h"
 
 #include "plight/include/common/vector.h"
-#include "plight/include/graphics/update_uniform_buffer.h"
+#include "plight/include/graphics/update_uniform.h"
 
 #include "entt/src/entt/entt.hpp"
 
