@@ -35,7 +35,7 @@ namespace Plight::Graphics
                      0, /* border */
                      GL_RGBA,
                      GL_UNSIGNED_BYTE,
-                     rData.m_data.empty() ? nullptr : &rData.m_data[0] /* image */);
+                     rData.m_data.empty() ? nullptr : rData.m_data.data() /* image */);
 
         // Filtering
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

@@ -36,6 +36,8 @@
 #include "plight/include/graphics/uniform_buffer_info.h"
 #include "plight/include/graphics/uniform_texture_info.h"
 
+#include "plight/include/sound/sound_manager.h"
+
 #include "plight/include/system/rendering_cpp.h"
 
 #include "entt/src/entt/entt.hpp"
@@ -76,6 +78,14 @@ namespace Labyrinth
         entt::registry registry;
         Plight::Graphics::Renderer renderer;
         Plight::Graphics::ShaderManager shaderManager;
+        Plight::Sound::SoundManager soundManager;
+
+        Plight::String loopSoundName("loop");
+        Plight::String hurtSoundName("hurt");
+        Plight::String enemySoundName("enemy");
+        soundManager.createSound(loopSoundName, true /* loopEnabled */);
+        soundManager.createSound(hurtSoundName);
+        soundManager.createSound(enemySoundName);
 
         glEnable(GL_DEBUG_OUTPUT);
         glDebugMessageCallback(debugCallback, 0);
@@ -358,6 +368,8 @@ namespace Labyrinth
 
         int lastHitPoints = 1000;
 
+        soundManager.playSound(loopSoundName);
+
         while (window.pollEvents())
         {
             auto const now = Plight::Time::now();
@@ -401,11 +413,15 @@ namespace Labyrinth
             auto const& rEnemyPosition = registry.get<Component::Position>(enemyEntity);
             auto const& rPlayerPosition = registry.get<Component::Position>(playerEntity);
             if (path.empty())
+            {
                 path = Map::findShortestPath(tileMap,
                                              registry.get<Component::Position>(mapEntity),
                                              rEnemyPosition,
                                              rPlayerPosition,
                                              allowedTiles);
+
+                soundManager.playSound(enemySoundName);
+            }
             auto& rEnemyVelocity = registry.get<Component::Velocity>(enemyEntity);
             if (!path.empty())
             {
@@ -437,7 +453,7 @@ namespace Labyrinth
                 rLightVelocity.m_delta[1] *= static_cast<int>(75.0 * delta);
             }
 
-            //System::Movement::update(registry);
+            soundManager.update();
             System::Collision::update(registry, delta);
             System::Position::update(registry);
             System::UniformModelViewMatrix::update(registry);
@@ -477,7 +493,10 @@ namespace Labyrinth
                 break;
             }
             else if (currentHitPoints < lastHitPoints)
+            {
+                soundManager.playSound(hurtSoundName);
                 std::cout << "OUCHIE(" << currentHitPoints << ")\n";
+            }
             else if (currentHitPoints > lastHitPoints)
                 std::cout << "HEAL(" << lastHitPoints << ")\n";
             lastHitPoints = currentHitPoints;

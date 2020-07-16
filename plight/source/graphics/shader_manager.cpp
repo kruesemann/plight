@@ -148,7 +148,7 @@ namespace Plight::Graphics
     ShaderManager::readStringFromFile(String const& rFullFilePath)
     {
         String result;
-        std::ifstream file(rFullFilePath.c_str());
+        std::ifstream file(rFullFilePath);
 
         if (!file)
             throw std::exception(String("IO error: Unable to open file %").arg(rFullFilePath).c_str());

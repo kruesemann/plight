@@ -37,6 +37,12 @@
     <Filter Include="include\system">
       <UniqueIdentifier>{08927fc2-25c3-4a95-98ee-389663b501ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\sound">
+      <UniqueIdentifier>{01f2fcb8-8234-4d53-9e5a-0615b70d79cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\sound">
+      <UniqueIdentifier>{8b9bb50d-ebd6-448a-862f-9f1452c35f98}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\common\string.cpp">
@@ -65,6 +71,12 @@
     </ClCompile>
     <ClCompile Include="source\graphics\update_uniform.cpp">
       <Filter>source\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sound\sound_manager.cpp">
+      <Filter>source\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sound\sound_buffer_io.cpp">
+      <Filter>source\sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +151,12 @@
     </ClInclude>
     <ClInclude Include="include\graphics\update_uniform.h">
       <Filter>include\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sound\sound_manager.h">
+      <Filter>include\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sound\sound_buffer_io.h">
+      <Filter>include\sound</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -23,7 +23,7 @@ namespace Plight::Graphics
             glBufferSubData(GL_UNIFORM_BUFFER,
                             rUniformUpdateData.m_offset,
                             rUniformUpdateData.m_data.size() * sizeof(decltype(rUniformUpdateData.m_data)::value_type),
-                            &rUniformUpdateData.m_data[0]);
+                            rUniformUpdateData.m_data.data());
         };
 
         glBindBuffer(GL_UNIFORM_BUFFER, rUniformBufferData.m_uniformBufferObject);

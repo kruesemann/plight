@@ -28,6 +28,8 @@
     <ClCompile Include="source\graphics\texture.cpp" />
     <ClCompile Include="source\graphics\update_uniform.cpp" />
     <ClCompile Include="source\main\window.cpp" />
+    <ClCompile Include="source\sound\sound_buffer_io.cpp" />
+    <ClCompile Include="source\sound\sound_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\common\math.h" />
@@ -52,6 +54,8 @@
     <ClInclude Include="include\graphics\update_uniform.h" />
     <ClInclude Include="include\graphics\uniform_buffer_info.h" />
     <ClInclude Include="include\main\window.h" />
+    <ClInclude Include="include\sound\sound_buffer_io.h" />
+    <ClInclude Include="include\sound\sound_manager.h" />
     <ClInclude Include="include\system\rendering.h" />
     <ClInclude Include="include\system\rendering_cpp.h" />
   </ItemGroup>
@@ -155,8 +159,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>glew32.lib;glfw3.lib;opengl32.lib;</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\plight\lib_dbg;$(SolutionDir)\3rdparty\glew\lib;$(SolutionDir)\3rdparty\glfw\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;glfw3.lib;opengl32.lib;OpenAL32.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\plight\lib_dbg;$(SolutionDir)\3rdparty\glew\lib;$(SolutionDir)\3rdparty\glfw\lib;$(SolutionDir)\3rdparty\openAl\lib</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -199,8 +203,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>glew32.lib;glfw3.lib;opengl32.lib;</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\plight\lib_dbg;$(SolutionDir)\3rdparty\glew\lib;$(SolutionDir)\3rdparty\glfw\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;glfw3.lib;opengl32.lib;OpenAL32.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\plight\lib_dbg;$(SolutionDir)\3rdparty\glew\lib;$(SolutionDir)\3rdparty\glfw\lib;$(SolutionDir)\3rdparty\openAl\lib</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

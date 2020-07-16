@@ -108,10 +108,10 @@ namespace Plight::Graphics::RenderDataFactory
         glBindVertexArray(result.m_vertexArrayObject);
 
         glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
-        glBufferData(GL_ARRAY_BUFFER, accumulatedAttributes.size() * sizeof(float), &accumulatedAttributes[0], GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, accumulatedAttributes.size() * sizeof(float), accumulatedAttributes.data(), GL_STATIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObject);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, rIndices.size() * sizeof(int), &rIndices[0], GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, rIndices.size() * sizeof(int), rIndices.data(), GL_STATIC_DRAW);
 
         // Pass attribute meta data to OpenGL
         auto const vertexSize = static_cast<int>(vertexDimension * sizeof(float));
