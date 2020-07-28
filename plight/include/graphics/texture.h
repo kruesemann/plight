@@ -5,6 +5,15 @@
 namespace Plight::Graphics
 {
     /*
+        Texture format
+    */
+    enum class ETextureFormat
+    {
+        RGBA,       // Standard color format with opacity for clammed 8-bit values
+        RGBA16F     // Floating point framebuffer format for non-clammed 16-bit values
+    };
+
+    /*
         Data for generating a new texture
     */
     struct TextureData
@@ -17,6 +26,9 @@ namespace Plight::Graphics
 
         // Height of the texture in pixels
         int                     m_height = 0;
+
+        // Texture format
+        ETextureFormat          m_textureFormat = ETextureFormat::RGBA;
     };
 
     /*

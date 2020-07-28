@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 
 
 namespace Plight::Graphics
@@ -16,7 +17,7 @@ namespace Plight::Graphics
                                 RenderTarget(int,
                                              int);
 
-        explicit                RenderTarget(Texture const&);
+        explicit                RenderTarget(std::vector<Texture> const&);
 
         // Width
         int                     m_width;

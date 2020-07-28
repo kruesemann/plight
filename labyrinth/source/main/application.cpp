@@ -98,8 +98,10 @@ namespace Labyrinth
         Plight::String const modelViewMatrixUniformBlockName("b_modelViewMatrix");
         Plight::String const textureUniformIdentifier("texture");
         Plight::String const lightTextureUniformIdentifier("lightTexture");
+        Plight::String const testTextureUniformIdentifier("testTexture");
         Plight::String const textureUniformName("u_texture");
         Plight::String const lightTextureUniformName("u_lightTexture");
+        Plight::String const testTextureUniformName("u_testTexture");
         Plight::String const pathUniformBlockName("b_path");
         Plight::String const dimensionsUniformBlockName("b_dimensions");
         Plight::Graphics::UniformBufferInfo cameraMatricesUniformBufferInfo(cameraMatricesUniformBlockName,
@@ -109,35 +111,40 @@ namespace Labyrinth
                                                                              16 * sizeof(float));
         Plight::Graphics::TextureData textureData;
         textureData.m_data = {
-              0,   0,   0,   0,      0,   0,   0,   0,    127, 255, 0, 255,    127, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,    127, 255, 0, 255,    127, 255, 0, 255,      0,   0,   0,   0,      0,   0,   0,   0,
-              0,   0,   0,   0,    127, 255,   0, 255,    127, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,    127, 255, 0, 255,    127, 255,   0, 255,      0,   0,   0,   0,
-            127, 255,   0, 255,    127, 255,   0, 255,     63, 255, 0, 255,     63, 191, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 191, 0, 255,     63, 255, 0, 255,    127, 255,   0, 255,    127, 255,   0, 255,
-            127, 255,   0, 255,    127, 255,   0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,    127, 255,   0, 255,    127, 255,   0, 255,
-            127, 255,   0, 255,    127, 255,   0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,    127, 255,   0, 255,    127, 255,   0, 255,
-            127, 255,   0, 255,    127, 255,   0, 255,     63, 191, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 191, 0, 255,    127, 255,   0, 255,    127, 255,   0, 255,
-            127, 255,   0, 255,    127, 255,   0, 255,     63, 255, 0, 255,     63, 191, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 191, 0, 255,     63, 255, 0, 255,    127, 255,   0, 255,    127, 255,   0, 255,
-            127, 255,   0, 255,    127, 255,   0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 191, 0, 255,     63, 191, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,    127, 255,   0, 255,    127, 255,   0, 255,
-              0,   0,   0,   0,    127, 255,   0, 255,    127, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,    127, 255, 0, 255,    127, 255,   0, 255,      0,   0,   0,   0,
-              0,   0,   0,   0,      0,   0,   0,   0,    127, 255, 0, 255,    127, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,    127, 255, 0, 255,    127, 255, 0, 255,      0,   0,   0,   0,      0,   0,   0,   0,
+              0,   0, 0,   0,      0,   0, 0,   0,     63, 191, 0, 255,     63, 191, 0, 255,     63, 191, 0, 255,     63, 191, 0, 255,     63, 191, 0, 255,     63, 191, 0, 255,      0,   0, 0,   0,      0,   0, 0,   0,
+              0,   0, 0,   0,     63, 191, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 191, 0, 255,      0,   0, 0,   0,
+             63, 191, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 191, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 191, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 191, 0, 255,
+             63, 191, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 191, 0, 255,
+             63, 191, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 191, 0, 255,
+             63, 191, 0, 255,     63, 255, 0, 255,     63, 191, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 191, 0, 255,     63, 255, 0, 255,     63, 191, 0, 255,
+             63, 191, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 191, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 191, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 191, 0, 255,
+             63, 191, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 191, 0, 255,     63, 191, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 191, 0, 255,
+              0,   0, 0,   0,     63, 191, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 255, 0, 255,     63, 191, 0, 255,      0,   0, 0,   0,
+              0,   0, 0,   0,      0,   0, 0,   0,     63, 191, 0, 255,     63, 191, 0, 255,     63, 191, 0, 255,     63, 191, 0, 255,     63, 191, 0, 255,     63, 191, 0, 255,      0,   0, 0,   0,      0,   0, 0,   0,
         };
         textureData.m_width = 10;
         textureData.m_height = 10;
         Plight::Graphics::TextureData lightTextureData;
         lightTextureData.m_width = 800;
         lightTextureData.m_height = 600;
+        lightTextureData.m_textureFormat = Plight::Graphics::ETextureFormat::RGBA16F;
         Plight::Graphics::UniformTextureInfo textureUniformInfo(textureUniformIdentifier,
                                                                 textureUniformName,
                                                                 Plight::Graphics::Texture::create(textureData));
         Plight::Graphics::UniformTextureInfo lightTextureUniformInfo(lightTextureUniformIdentifier,
                                                                      lightTextureUniformName,
                                                                      Plight::Graphics::Texture::create(lightTextureData));
+        Plight::Graphics::UniformTextureInfo testTextureUniformInfo(testTextureUniformIdentifier,
+                                                                    testTextureUniformName,
+                                                                    Plight::Graphics::Texture::create(lightTextureData));
         auto const& rPlayerShader = shaderManager.getOrCreateShader(Plight::String("test_shader_player"),
                                                                     {cameraMatricesUniformBufferInfo,
                                                                      modelViewMatrixUniformBufferInfo,
                                                                      Plight::Graphics::UniformBufferInfo(dimensionsUniformBlockName,
                                                                                                          4 * sizeof(float))},
                                                                     {textureUniformInfo,
-                                                                     lightTextureUniformInfo});
+                                                                     lightTextureUniformInfo,
+                                                                     testTextureUniformInfo});
         auto const& rMapShader = shaderManager.getOrCreateShader(Plight::String("test_shader_map"),
                                                                  {cameraMatricesUniformBufferInfo,
                                                                   modelViewMatrixUniformBufferInfo,
@@ -145,13 +152,15 @@ namespace Labyrinth
                                                                                                       80 * sizeof(float)),
                                                                   Plight::Graphics::UniformBufferInfo(dimensionsUniformBlockName,
                                                                                                       4 * sizeof(float))},
-                                                                 {lightTextureUniformInfo});
+                                                                 {lightTextureUniformInfo,
+                                                                  testTextureUniformInfo});
         auto const& rLightShader = shaderManager.getOrCreateShader(Plight::String("test_shader_light"),
                                                                    {cameraMatricesUniformBufferInfo,
                                                                     modelViewMatrixUniformBufferInfo},
                                                                    {});
 
-        Plight::Graphics::RenderTarget lightTextureRenderTarget(lightTextureUniformInfo.m_texture);
+        Plight::Graphics::RenderTarget lightTextureRenderTarget({lightTextureUniformInfo.m_texture,
+                                                                 testTextureUniformInfo.m_texture});
         auto uniformBufferData = rMapShader.m_uniformBufferDataMap.at(cameraMatricesUniformBlockName);
 
         auto playerEntity = registry.create();
@@ -186,7 +195,8 @@ namespace Labyrinth
                                                                                                                              playerIndices));
         rPlayerRenderData.m_uniformTextureUpdates = {
             rPlayerShader.m_uniformTextureDataMap.at(textureUniformIdentifier),
-            rPlayerShader.m_uniformTextureDataMap.at(lightTextureUniformIdentifier)
+            rPlayerShader.m_uniformTextureDataMap.at(lightTextureUniformIdentifier),
+            rPlayerShader.m_uniformTextureDataMap.at(testTextureUniformIdentifier)
         };
 
         Component::UniformModelViewMatrix playerUniformModelViewMatrix;
@@ -295,7 +305,8 @@ namespace Labyrinth
                                                                                                                           attributes,
                                                                                                                           indices));
         rMapRenderData.m_uniformTextureUpdates = {
-            rMapShader.m_uniformTextureDataMap.at(lightTextureUniformIdentifier)
+            rMapShader.m_uniformTextureDataMap.at(lightTextureUniformIdentifier),
+            rMapShader.m_uniformTextureDataMap.at(testTextureUniformIdentifier)
         };
 
         Component::UniformModelViewMatrix uniformModelViewMatrix;

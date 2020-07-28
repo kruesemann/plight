@@ -26,10 +26,22 @@ namespace Plight::Graphics
         glActiveTexture(GL_TEXTURE0 + result.m_textureUnit);
         glBindTexture(GL_TEXTURE_2D, result.m_textureObject);
 
+        auto const computeGLFormat = [](ETextureFormat eFormat)
+        {
+            switch (eFormat)
+            {
+            case Plight::Graphics::ETextureFormat::RGBA:
+                return GL_RGBA;
+            case Plight::Graphics::ETextureFormat::RGBA16F:
+                return GL_RGBA16F;
+            }
+            return 0;
+        };
+
         // Update with given image
         glTexImage2D(GL_TEXTURE_2D,
                      0, /* mipmap level */
-                     GL_RGBA,
+                     computeGLFormat(rData.m_textureFormat),
                      result.m_width,
                      result.m_height,
                      0, /* border */
